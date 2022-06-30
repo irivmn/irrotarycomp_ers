@@ -1,38 +1,40 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.core.mail import send_mail
-from django.conf import settings
-from CoolerProps.settings import EMAIL_HOST_USER
+from django.http import HttpResponse
 from django.shortcuts import render
 from ERS.demo1 import *
 from ERS.ERS_Trial1 import *
-import math, random
 from .models import *
-from django.contrib.auth.models import User,auth
+from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 import csv,json
+#from django.core.mail import send_mail
+#from django.conf import settings
+#from CoolerProps.settings import EMAIL_HOST_USER
 
-a_user=None
-user=None
 
+
+#First function which will render the login page once the application opened.
 def home(request):
+    logout(request)
     return render(request,"login.html")
 
+#Loging out from the application and redirecting to the login page.
 def logout_out(request):
     print("logged out..")
     logout(request)
     return redirect("/")
 
+#Login function by verifing the user-id and password.
 def login_in(request):
+    logout(request)
     if request.method=="POST":
         username=request.POST['username']
         psw=request.POST['psw']
-
         user=authenticate(username=username,password=psw)
         print(user)
-        if user is not None:
+        if user is not None: 
             check=Registration_Approval.objects.filter(UserID = username,Aprove=0)
-            if len(check)!=0:
+            if len(check)!=0: #Checking whether the user is approved or not.
                 login(request,user)
                 return redirect(Main_home)
             else:
@@ -53,10 +55,12 @@ def login_in(request):
     else:
         return redirect("/")
 
-def Main_home(request):
+#rendering the main home page.
+def Main_home(request):  
     return render(request,"Home.html")
 
-def register(request):
+#Registration function.
+def register(request):   
     if request.method == 'POST':
         username = request.POST['userid']
         fname = request.POST['fname']
@@ -71,22 +75,22 @@ def register(request):
         user2=users.objects.filter(Email=email)
         print(user1.count())
         print(user2.count())'''
-        if User.objects.filter(username=username).exists():
+        if User.objects.filter(username=username).exists(): #UserID verification for uniqueness.
             return render(request,"register.html",{"error":"Username is already taken","fname":fname,"lname":lname,"email":email,"userid":username})
-        elif User.objects.filter(email=email).exists():
+        elif User.objects.filter(email=email).exists(): #Email-ID verification for uniqueness.
             return render(request,"register.html",{"error":"Mail-id is already taken","fname":fname,"lname":lname,"email":email,"userid":username})
-        elif psw1!=psw2:
+        elif psw1!=psw2: #Password matching or not verfication.
             return render(request,"register.html",{"error":"Password mismatch","fname":fname,"lname":lname,"email":email,"userid":username})
         else:
             print("Account registered successfully..")
-            #request.session['username']=username
+            #Account creating and saving in the database.
             user= User.objects.create_user(first_name=fname,last_name=lname,username=username,email=email,password=psw1)
             user.save()
-            print("DONE")
+            #Updating for admin approval.
             Reg_App=Registration_Approval(UserID=username,Email=email,Aprove=1)
             Reg_App.save()
-            ######################### mail system ####################################
-            '''sub='welcome to SNS'
+            '''######################### mail system ####################################
+            sub='welcome to SNS'
             message= f"Your registration is successful.."
             email_from= settings.EMAIL_HOST_USER
             to= [email]
@@ -95,83 +99,36 @@ def register(request):
     else:
         return render(request,"register.html")
 
-def forgot_password(request):
-    if request.method=="POST":
-        sub="Reset OTP."
-        message=f'Your OTP to reset password is 123456.'
-        to=["pavan0312c@gmail.com"]
-        email_from=settings.EMAIL_HOST_USER
-        print(email_from)
-        send_mail(sub,message,email_from,to)
-        return render(request,"login.html")
-    else:
-        return render(request,"forgot_password.html")
-
-def generateOTP() :
-    digits = "0123456789"
-    OTP = ""
-    for i in range(4) :
-        OTP += digits[math.floor(random.random() * 10)]
-    return OTP
-
-def send_otp(request):
-    email=request.GET.get("T_amb")
-    print(email)
-    o=generateOTP()
-    htmlgen = '<p>Your OTP is <strong>o</strong></p>'
-    print(o)
-    #send_mail('OTP request',o,'<your gmail id>',[email], fail_silently=False, html_message=htmlgen)
-    return HttpResponse(o)
-
-def sampleotp(request):
-    return render(request,"smapleotp.html")
-
-def password_trial(request):
-    return render(request,"password_trial.html")
-
+#Plate and Bar Processing Function.
 def demo1(request):
     if request.method=="POST":
+        Fluid=request.POST['Fluid']
         T_amb=request.POST['T_amb']
         RH_amb=request.POST['RH_amb']
         Altitude=request.POST['Altitude']
-        FTPQ=request.POST['HCA']
-        print(FTPQ)
-        HCA=HCA_details.objects.filter(name=FTPQ)
-        print(HCA)
-        for i in HCA:
-            data=i
-        print(data.FAD)
-        print(data.T_H_In)
-        print(data.P_input)
-        print(data.Q_input)
-        (Q,Weight)=demo123(T_amb,RH_amb,Altitude,data)
-        return render(request,"demo1.html",{'T_amb':T_amb,"RH_amb":RH_amb,"Altitude":Altitude,"HCA":FTPQ,"Q":Q,"Weight":Weight})
+        FAD=request.POST['FAD']
+        T_H_In=request.POST['T_H_In']
+        P=request.POST['P']
+        Q=request.POST['Q']
+        Delta_preheat=request.POST['Delta_preheat']
+        M_dot_C=request.POST['M_dot_C']
+        L_core=request.POST['L_core']
+        T_core=request.POST['T_core']
+        N_pass_cs=request.POST['N_pass_cs']
+        N_pass_hs=request.POST['N_pass_hs']
+        n_coldrows=request.POST['n_coldrows']
+        Fin_Name_Cold=request.POST['Fin_Name_Cold']
+        Fin_Name_Hot=request.POST['Fin_Name_Hot']
+        print(T_amb,RH_amb,Altitude,FAD,T_H_In,P,Q,Delta_preheat,M_dot_C,L_core,T_core,N_pass_cs,N_pass_hs,n_coldrows,Fin_Name_Cold,Fin_Name_Hot)
+        #calling the Standalonr plate and bar module.
+        (Q,Weight,T_H,T_C,D_C,D_H)=demo123(Fluid,T_amb,RH_amb,Altitude,FAD,T_H_In,P,Q,Delta_preheat,M_dot_C,L_core,T_core,N_pass_cs,N_pass_hs,n_coldrows,Fin_Name_Cold,Fin_Name_Hot)
+        #returning output the webpage
+        return HttpResponse(json.dumps({"Q":Q,"Weight":Weight,"T_H":T_H,"T_C":T_C,"D_H":D_H,"D_C":D_C}),content_type ="application/json")
     else:
-        return render(request,"demo1.html",{"Q":Q,"Weight":Weight})
+        fin_details=Fin_parameters.objects.all()
+        return render(request,"demo2.html",{"fin_details":fin_details})
         
-
-    
-def reset_password(request):
-    un = request.GET["username"]
-    try:
-        #user = get_object_or_404(User,username=un)
-        user = "Pavan"
-        otp = random.randint(1000,9999)
-        msz="hi...."
-        #msz = "Dear {} \n{} is your One Time Password (OTP) \nDo not share it with others \nThanks&Regards \nMyWebsite".format(user.username, otp)
-        try:
-            #email = EmailMessage("Account Verification",msz,to=[user.email])
-            #email.send()
-            print("Email Sent...")
-            #return JsonResponse({"status":"sent","email":user.email,"rotp":otp})
-            return JsonResponse({"status":"sent","email":"abc@gmail.com","rotp":otp})
-        except:
-            print("Email Sent1...")
-            return JsonResponse({"status":"error","email":user.email})
-    except:
-        print("Email Sent2...")
-        return JsonResponse({"status":"failed"})
-
+#Admin main page showing all the tables in the database.
 def admin_main(request):
     Reg_app=Registration_Approval.objects.filter(Aprove=1)
     Ret_app=Reset_password_Approval.objects.filter(Aprove=1)
@@ -182,39 +139,38 @@ def admin_main(request):
     #return render(request,"admin_main.html",{'Reg_app':Reg_app,'Ret_app':Ret_app})
     return render(request,"Admin_All.html",{'Reg_app':Reg_app,'Ret_app':Ret_app,'user_d':user_d,'HCA_d':HCA_d,'CD26_a_d':CD26_a_d,'CD26_a_d_r':CD26_a_d_r})
 
+#To approve or reject the new user registration request from admin page.
 def Register_request(request):
-    if request.POST['approve']=="Approve":
+    if request.POST['approve']=="Approve":  # Approving function.
         userid=request.POST['userid']
         print(userid)
         X=Registration_Approval.objects.filter(UserID = userid).update(Aprove=0)
         print("Approved")
-    elif request.POST['approve']=="Reject":
+    elif request.POST['approve']=="Reject": # Rejecting function.
         X=Registration_Approval.objects.filter(UserID = userid).update(Aprove=-1)
         print("Rejected")
-    Reg_app=Registration_Approval.objects.filter(Aprove=1)
-    Ret_app=Reset_password_Approval.objects.filter(Aprove=1)
-    return render(request,"admin_main.html",{'Reg_app':Reg_app,'Ret_app':Ret_app})
+    return redirect(admin_main)
 
-
+#To approve or reject the reset password request from admin page.
 def Reset_pwd_request(request):
-    if request.POST['approve']=="Approve":
+    if request.POST['approve']=="Approve":  # Approving function.
         userid=request.POST['userid']
         print(userid)
         X=Reset_password_Approval.objects.filter(UserID = userid).update(Aprove=0)
         Y=Reset_password_Approval.objects.filter(UserID = userid)
         for i in Y:
             psw=i.Password
-        Z=User.objects.filter(userID = userid).update(password=psw)                ####testing pending
+        Z=User.objects.get(username = userid)    
+        Z.set_password(psw)                          #to hash the raw password
+        Z.save()                                     #to update in the database
         print("Approved")
-    elif request.POST['approve']=="Reject":
+    elif request.POST['approve']=="Reject":          # Rejecting function.
         X=Reset_password_Approval.objects.filter(UserID = userid).update(Aprove=-1)
         print("Rejected")
-    Reg_app=Registration_Approval.objects.filter(Aprove=1)
-    Ret_app=Reset_password_Approval.objects.filter(Aprove=1)
-    return render(request,"admin_main.html",{'Reg_app':Reg_app,'Ret_app':Ret_app})
+    return redirect(admin_main)
 
-
-def upload_data(request):
+#Upload data to the database to CD26_airend_data_rated table
+def upload_data(request):  
     path="C:\\Users\\pxc2007.ext\\Desktop\\CD26 Airend Data Rated pressure.CSV"
     list=[]
     with open(path, 'r') as file:
@@ -234,7 +190,8 @@ def upload_data(request):
         print(i.Aprove)
     return render(request,"admin_main.html",{'data':list})
 
-def calculate(request):
+#Same as below send_data function.
+'''def calculate(request):
     if(request.method=="POST"):
         T_amb=request.POST['T_amb']
         RH_amb=request.POST['RH_amb']
@@ -264,22 +221,47 @@ def calculate(request):
     else:
         WF,ReH,DT=10,15,20
         list=CD26_airend_data_rated.objects.all()
-        return render(request,"Home.html",{"model_id":list,"WF":WF,"ReH":ReH,"DT":DT})
+        return render(request,"Home.html",{"model_id":list,"WF":WF,"ReH":ReH,"DT":DT})'''
 
+#This function is used to send the output from the ERS_TRIAL module to the main page.
 def send_data(request):
     if request.method=="POST":
         TYPE=request.POST['TYPE']
         T_amb=request.POST['T_amb']
+        T_amb_unit=request.POST['T_amb_unit']
         RH_amb=request.POST['RH_amb']
         Altitude=request.POST['Altitude']
+        Altitude_unit=request.POST['Altitude_unit']
         model_id=request.POST['Model_id']
         P=request.POST['P']
         Pr_type=request.POST['Pr_type']
         TW_in=request.POST['T_in']
+        TW_in_unit=request.POST['T_in_unit']
         TW_out=request.POST['T_out']
+        TW_out_unit=request.POST['T_out_unit']
         CTD_ac=request.POST['CTD_ac']
         CTD_ic=request.POST['CTD_ic']
-        input_=[T_amb,RH_amb,Altitude,model_id,P,Pr_type,TW_in,TW_out,CTD_ac,CTD_ic]
+        print(T_amb,T_amb_unit,RH_amb,Altitude,Altitude_unit,model_id,P,Pr_type,TW_in,TW_in_unit,TW_out,TW_out_unit,CTD_ac,CTD_ic)
+        #unit conversion
+        if(T_amb_unit=="K"):
+            T_amb=float(T_amb)-273.15;
+        elif(T_amb_unit=="F"):
+            T_amb=(float(T_amb) - 32)*(5/9);
+
+        if Altitude_unit=="Feet":
+            Altitude=(float(Altitude) /3.281)
+
+        if(TW_in_unit=="K"):
+            TW_in=float(TW_in)-273.15;
+        elif(TW_in_unit=="F"):
+            TW_in=(float(TW_in) - 32)*(5/9);
+
+        if(TW_out_unit=="K"):
+            TW_out=float(TW_out)-273.15;
+        elif(TW_out_unit=="F"):
+            TW_out=(float(TW_out) - 32)*(5/9);
+
+        #collecting Airend data from database.
         if Pr_type=="Rated_Pressure":
             RP=CD26_airend_data_rated.objects.filter(Model_id=model_id)
             for i in RP:
@@ -291,11 +273,13 @@ def send_data(request):
             M_data=data
         else:
             M_data=CD26_airend_data.objects.filter(Model_id=model_id)
-        (WF,ReH,DT)=ERS_TRIAL(float(T_amb),float(RH_amb),float(Altitude),model_id,float(P),Pr_type,float(TW_in),float(TW_out),float(CTD_ac),float(CTD_ic),M_data)
+        #calling the ERS_TRIAL function 
+        (Q_dot_1,Q_dot_2,Q_oil)=ERS_TRIAL(TYPE,float(T_amb),float(RH_amb),float(Altitude),model_id,float(P),Pr_type,float(TW_in),float(TW_out),float(CTD_ac),float(CTD_ic),M_data)
         print(TYPE,T_amb,RH_amb,Altitude,model_id,P,Pr_type,TW_in,TW_out,CTD_ac,CTD_ic)
         print(model_id,"-------------------------------------------------------------------")
-        return HttpResponse(json.dumps({ "WF":WF, "ReH":ReH, "DT":DT}),content_type ="application/json")
+        return HttpResponse(json.dumps({ "Q_dot_1":Q_dot_1, "Q_dot_2":Q_dot_2, "Q_oil":Q_oil}),content_type ="application/json")
 
+#To open the parallel configuration of ERS-tool
 def home_parallel(request):
     list=CD26_airend_data_rated.objects.all()
     data={}
@@ -308,7 +292,7 @@ def home_parallel(request):
     max_T=json.dumps(data1)
     return render(request,"Home_parallel.html",{"model_id":list,"max_v":max_v,"max_T":max_T})
 
-
+#To open the series configuration of ERS-tool
 def home_series(request):
     list=CD26_airend_data_rated.objects.all()
     data={}
@@ -321,6 +305,7 @@ def home_series(request):
     max_T=json.dumps(data1)
     return render(request,"Home_series.html",{"model_id":list,"max_v":max_v,"max_T":max_T})
 
+#Trial ERS-tool parallel configutaton for editing and testing.
 def HTP(request):
     list=CD26_airend_data_rated.objects.all()
     data={}
@@ -333,39 +318,42 @@ def HTP(request):
     max_T=json.dumps(data1)
     return render(request,"HPT.html",{"model_id":list,"max_v":max_v,"max_T":max_T})
 
+#To Reset password the user or admin password
 def reset_password(request):
     if request.method=="POST":
         username=request.POST['userid']
         email=request.POST['email']
-        user=users.objects.filter(userID=username,Email=email)
+        user=User.objects.filter(username=username,email=email)
         print(len(user))
-        if len(user)==0:
+        if len(user)==0: #checking for user existness
             return render(request,"reset_password.html",{"error":"User not exist..","uid":username,"eid":email})
         psw1=request.POST['psw1']
         psw2=request.POST['psw2']
-        if psw1==psw2:
-            ReP_App=Reset_password_Approval(UserID=username,Email=email,Password=psw1,Aprove=1)
-            ReP_App.save()
+        if psw1==psw2: #verifying the password match
+            ReP_App=Reset_password_Approval(UserID=username,Email=email,Password=psw1,Aprove=1) 
+            ReP_App.save()        #Updating for admin approval to reset password.
             return render(request,"Login.html",{"error":"Wait for admin approval.."})
         else:
             return render(request,"reset_password.html",{"error":"Password not matching..","uid":username,"eid":email})
     else:
         return render(request,"reset_password.html")
 
+#To open and validate the admin login.
 def admin_login(request):
+    logout(request)
     if request.method=="POST":
         username=request.POST['username']
         psw=request.POST['psw']
         a_user=authenticate(username=username,password=psw)
         print(a_user)
-        if a_user is not None:
+        if a_user is not None:          #checking for user existness   
             if  a_user.is_authenticated:
                 print("Authenticated")
             check=User.objects.filter(username=username,is_superuser = True)
             print(len(check))
-            for i in check:
+            for i in check:  
                 print(i)
-            if len(check)!=0:
+            if len(check)!=0:    #checking for admin existness
                 login(request,a_user)
                 return redirect(admin_main)
             else:

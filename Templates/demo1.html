@@ -3,10 +3,11 @@
 <html lang="en">
 
 <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>ERS-Tool</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
     <style>
         .avatar {
@@ -41,24 +42,34 @@
             position: relative;
             width: 100%;
             left:39px;
-            top:30px;
-            font-size: 18px;
         }
         .input1234 input[type="number"]{
-            width:40px;
-            height: 20px;
-            
+            width:50px;
+            height: 15px;
         }
         .input1234 select{
             width: 40px;
-            height: 17px;
+            height: 20px;
             font-size: 14px;
         }
         .bg2{
             position: absolute;
-            left:50%;
+            left:75%;
             top:17%;
             font-size: 18px;
+        }
+        .bg_img{
+            position: absolute;
+            left:15%;
+            top:20%;
+        }
+        p{
+            font-size: 15px;
+        }
+        .fin{
+            position: absolute;
+            left:20%;
+            top:0%;
         }
     </style>
 </head>
@@ -66,36 +77,83 @@
 <body style="background-color: white; " >
     <div class="top" >
         <img src="{% static 'Images\IR_logo.png' %}" class="avatar">
-        <a href=""><b>Log-out</b></a>
+        <a href="{% url 'logout' %}"><b>Log-out</b></a>
     </div>
 <div class="bg">
+    <img src="{% static 'Images\Capture.PNG' %}" class="bg_img">
     <div class="input1234" id="input1234">
-        <form method="POST" action="demo1">
+        <form id="post-form">
         {% csrf_token %}
-        <h3>Give Input:</h3>
-        <div class="input1" >
-        <p>T<sub>amb</sub> &emsp;&nbsp;= <input type="number"; id="T_amb"; name="T_amb" value="{{T_amb}}" >
-          <select name="Temp" id="temp" name="'temp">
+        <div class="T_amb" >
+        <p>T<sub>amb</sub> &emsp;&nbsp;= <input type="number"; id="T_amb"; step="0.01" name="T_amb" value="{{T_amb}}" required>
+          <!--select name="Temp" id="temp" name="'temp">
             <option value="C" >C</option>
             <option value="F">F</option>
             <option value="K">K</option>
-          </select></p>
+          </select--> C </p>
         </div>
-        <div class="input2" >
-        <p>RH<sub>amb</sub> &ensp;= <input type="number"; id="RH"; name="RH_amb" step="0.01" value="{{RH_amb}}"></p>
+        <div class="RH_amb" >
+        <p>RH<sub>amb</sub> &ensp;= <input type="number"; id="RH"; name="RH_amb" step="0.01" value="{{RH_amb}}" required> fraction </p>
         </div>
-        <div class="input3" >
-        <p>Altitude = <input type="number"; id="Altitude"; name="Altitude" value="{{Altitude}}">
-          <select name="meter" id="meter" name="meter">
+        <div class="Altitude" >
+        <p>Altitude = <input type="number"; id="Altitude"; name="Altitude" step="0.01" value="{{Altitude}}" required>
+          <!--select name="meter" id="meter" name="meter">
             <option value="m">M</option>
             <option value="mm">MM</option>
             <option value="cm">CM</option>
-          </select></p>
+          </select--> M </p>
         </div>
-        <div class="HCA" >
-            <p>HCA =  &ensp;= <input type="text" id="HCA" name="HCA"  value="{{HCA}}" style="width:40px; height: 20px;"></p>
+        <div class="FAD" >
+            <p>FAD = <input type="number"; id="FAD"; name="FAD" step="0.01" value="{{FAD}}" required> M3/hr </p>
+        </div>
+        <div class="T_H_In" >
+            <p>T_H_In = <input type="number"; id="T_H_In"; name="T_H_In" step="0.01" value="{{T_H_In}}" required> C </p>
+        </div>
+        <div class="P" >
+            <p>P = <input type="number"; id="P"; name="P" step="0.01" value="{{P}}" required> bar </p>
+        </div>
+        <div class="Q" >
+            <p>Q = <input type="number"; id="Q"; name="Q" step="0.01" value="{{Q}}" required> W</p>
+        </div>
+        <div class="Delta_preheat" >
+            <p>Delta_preheat = <input type="number"; id="Delta_preheat"; step="0.01" name="Delta_preheat" value="{{Delta_preheat}}" required></p>
+        </div>
+        <div class="M_dot_C" >
+            <p>M_dot_C = <input type="number"; id="M_dot_C"; name="M_dot_C" step="0.01" value="{{M_dot_C}}" required> kg/s</p>
+        </div>
+        <div class="L_core" >
+            <p>L_core = <input type="number"; id="L_core"; name="L_core" step="0.01" value="{{L_core}}" required> mm </p>
+        </div>
+        <div class="T_core" >
+            <p>T_core = <input type="number"; id="T_core"; name="T_core" step="0.01" value="{{T_core}}" required> mm </p>
+        </div>
+        <div class="N_pass_cs" >
+            <p>N_pass_cs = <input type="number"; id="N_pass_cs"; name="N_pass_cs" value="{{N_pass_cs}}" required></p>
+        </div>
+        <div class="N_pass_hs" >
+            <p>N_pass_hs = <input type="number"; id="N_pass_hs"; name="N_pass_hs" value="{{N_pass_hs}}" required></p>
+        </div>
+        <div class="n_coldrows" >
+            <p>n_coldrows = <input type="number"; id="n_coldrows"; name="n_coldrows" value="{{n_coldrows}}" required></p>
+        </div>
+        <div class="fin">
+            <div class="Fin_Name_Cold" >
+                <p>Fin_Name_Cold = <select name="Fin_Name_Cold" id="Fin_Name_Cold" style="width:150px;">
+                {% for i in fin_details %}
+                    <option value="{{i.fin_name}}">{{i.fin_name}}</option>
+                {% endfor %}
+                </select></p>
             </div>
-        <input type="submit" name="demo1_sub" value="Calculate" onclick="ajax_send_otp()">
+            <div class="Fin_Name_Hot" >
+                <p>Fin_Name_Hot &ensp;= <select name="Fin_Name_Hot" id="Fin_Name_Hot" style="width:150px;">
+                {% for i in fin_details %}
+                    <option value="{{i.fin_name}}">{{i.fin_name}}</option>
+                {% endfor %}
+                </select></p>
+            </div> 
+            <input type="submit" name="demo1_sub" value="Calculate">
+        </div>
+
         </form>
     </div>
     
@@ -103,34 +161,43 @@
 <div class="bg2">
     <div class="output1234"  >
         <h3>Output:</h3>
-        <p>Q = {{Q}}</p>
-        <p>Weight = {{Weight}}</p>
+        <p>Q : <span id="OT"></span></p>
+        <p>Weight : <span id="PT"></span></p>
     </div>
 </div>
-
-<script>
-    var otp_from_back="";
-    function ajax_send_otp(){
-       document.getElementById("");
-       T_amb = document.getElementById("T_amb");
-       RH_amb= document.getElementById("RH_amb");
-       Altitude= document.getElementById("Altitude");
-       
-     $.post("/send_otp",
-         {
-             "T_amb":T_amb.value,
-             "RH_amb":RH_amb.value,
-             "Altitude":Altitude.value,
-             "csrfmiddlewaretoken":"{{csrf_token}}"
-         },
-         function(data, status){
-             if(status=="success"){
-                 otp_from_back = data;
-                 document.getElementById("input1234").innerHTML=T_amb.value;
-                 }
-    }
-    );}
+<script >
+    $(document).on('submit','#post-form',function(e){
+        e.preventDefault();
+        $.ajax({
+            type:'POST',
+            url:'/demo1',
+            data:{
+                T_amb:$('#T_amb').val(),
+                RH_amb:$('#RH').val(),
+                Altitude:$('#Altitude').val(),
+                FAD:$('#FAD').val(),
+                T_H_In:$('#T_H_In').val(),
+                P:$('#P').val(),
+                Q:$('#Q').val(),
+                Delta_preheat:$('#Delta_preheat').val(),
+                M_dot_C:$('#M_dot_C').val(),
+                L_core:$('#L_core').val(),
+                T_core:$('#T_core').val(),
+                N_pass_cs:$('#N_pass_cs').val(),
+                N_pass_hs:$('#N_pass_hs').val(),
+                n_coldrows:$('#n_coldrows').val(),
+                Fin_Name_Cold:$('#Fin_Name_Cold').val(),
+                Fin_Name_Hot:$('#Fin_Name_Hot').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                },
+            success:function(data){
+                $('#OT').html(data.Q+" W");
+                $('#PT').html(data.Weight+" kg");
+            }
+        });
+    });
 </script>
+
 </body>
 {% endblock start%}
 

@@ -187,13 +187,13 @@
 <body style="background-color: white; " >
     {% if user.is_authenticated %}
     <div class="top" >
-        <img src="https://github.com/Pavanc03/CERSTool/blob/main/static/Images/IR_logo.png?raw=true" class="avatar">
+        <img src="{% static 'Images\IR_logo.png' %}" class="avatar">
         <a href="{% url 'logout' %}"><b>Log-out</b></a>
     </div>
 <div class="bg">
 <form id="post-form">
     {% csrf_token %}
-    <img src="https://github.com/Pavanc03/CERSTool/blob/main/static/Images/Parllel.jpg?raw=true" style="position:relative; left:10%; width:1000px; top:15px;">
+    <img src="{% static 'Images\Parllel.jpg' %}" style="position:relative; left:10%; width:1000px; top:15px;">
     <input type="text" value="PARALLEL" id="TYPE" name="TYPE" hidden>
     <div class="input1234"  >
         <div class="input4" >
@@ -535,7 +535,7 @@
 </script>
 <div class="Q_oil_C" >
     <p>Q_oil &emsp;&nbsp;= <input type="number"; id="Q_oil"; name="Q_oil"; value="0" disabled>
-        <input type="text" id="prev6" value="kW" hidden>
+        <input type="text" id="prev7" value="kW" hidden>
       <select name="Q_oil_select" id="Q_oil_select" onchange="Q_oilF()">
         <option value="kW" >kW</option>
         <option value="W">W</option>
@@ -543,22 +543,22 @@
 </div>
 <script>
     document.getElementById("Q_oil_select").Q_oilF = function () {
-        var output6 = document.getElementById("Q_oil");
+        var output7 = document.getElementById("Q_oil");
         var Q_oil_type = document.getElementById("Q_oil_select");
-        var curent6=Q_oil_type.value;
-        var prev6 = document.getElementById("prev6");
-        if (prev6.value=="kW" && Q_oil_type.value=="W"){
-            output6.value = parseFloat(output6.value) *1000;
+        var curent7=Q_oil_type.value;
+        var prev7 = document.getElementById("prev7");
+        if (prev7.value=="kW" && Q_oil_type.value=="W"){
+            output7.value = parseFloat(output7.value) *1000;
         }
-        else if(prev6.value=="W" && Q_oil_type.value=="kW"){
-            output6.value = parseFloat(output6.value) /1000;
+        else if(prev7.value=="W" && Q_oil_type.value=="kW"){
+            output7.value = parseFloat(output7.value) /1000;
         }
         else{
-            output6.value = output6.value;
+            output7.value = output7.value;
         }
         //output.value = output.value + 273.15;
         //document.getElementById("demo1").innerHTML = prev.value;
-        prev6.setAttribute("value", Q_oil_type.value);
+        prev7.setAttribute("value", Q_oil_type.value);
     }
 </script>
 <!--p class="OT">Q_dot_1 :<span id="OT"></span> [kW]</p>
@@ -576,8 +576,8 @@
             alert("T_out should be atleast 5° greater than T_in");
         }
         else{
-            if (Math.abs(parseFloat(T_ambient.value)-parseFloat(T_in.value)) < 30){
-                alert("The difference betwwen T_amb and T_in should be greater than 30°.");
+            if (Math.abs(parseFloat(T_ambient.value)-parseFloat(T_in.value)) > 30){
+                alert("The difference between T_amb and T_in is greater than 30°.");
             }
             $.ajax({
                 type:'POST',
@@ -585,19 +585,41 @@
                 data:{
                     TYPE:$('#TYPE').val(),
                     T_amb:$('#T_amb').val(),
+                    T_amb_unit:$('#T_amb_select').val(),
                     RH_amb:$('#RH_amb').val(),
                     Altitude:$('#Altitude').val(),
+                    Altitude_unit:$('#Altitude_type').val(),
                     Model_id:$('#Model_id').val(),
                     P:$('#P_Range').val(),
                     Pr_type:$('input:radio[name=Pressure]:checked').val(),
                     T_in:$('#T_in').val(),
+                    T_in_unit:$('#Tw_in_select').val(),
                     T_out:$('#T_out').val(),
+                    T_out_unit:$('#Tw_out_select').val(),
                     CTD_ac:$('#CTD1_Range').val(),
                     CTD_ic:$('#CTD2_Range').val(),
                     csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
                 },
                 success:function(data){
-                    document.getElementById("Q_dot_1").value = (data.WF);
+                    if(document.getElementById("Q_dot_1_select").value=="kW"){
+                        document.getElementById("Q_dot_1").value = data.WF;
+                    }
+                    else{
+                        document.getElementById("Q_dot_1").value = data.WF *1000;
+                    }
+                    if(document.getElementById("Q_dot_2_select").value=="kW"){
+                        document.getElementById("Q_dot_2").value = data.ReH;
+                    }
+                    else{
+                        document.getElementById("Q_dot_2").value = data.ReH *1000;
+                    }
+                    if(document.getElementById("Q_oil_select").value=="kW"){
+                        document.getElementById("Q_oil").value = data.DT;
+                    }
+                    else{
+                        document.getElementById("Q_oil").value = data.DT *1000;
+                    }
+                    /*document.getElementById("Q_dot_1").value = (data.WF);
                     document.getElementById("Q_dot_2").value = (data.ReH);
                     document.getElementById("Q_oil").value = (data.DT);
                     /*$('#OT').html(data.WF);

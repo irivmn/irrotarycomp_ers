@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>ERS-Tool</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
     <style>
         .avatar {
@@ -187,13 +187,13 @@
 <body style="background-color: white; " >
     {% if user.is_authenticated %}
     <div class="top" >
-        <img src="https://github.com/Pavanc03/CERSTool/blob/main/static/Images/IR_logo.png?raw=true" class="avatar">
+        <img src="{% static 'Images\IR_logo.png' %}" class="avatar">
         <a href="{% url 'logout' %}"><b>Log-out</b></a>
     </div>
 <div class="bg">
 <form id="post-form">
         {% csrf_token %}
-    <img src="https://github.com/Pavanc03/CERSTool/blob/main/static/Images/Series.jpg?raw=true" style="position:relative; left:10%; width:1000px; top:15px;">
+    <img src="{% static 'Images\Series.jpg' %}" style="position:relative; left:10%; width:1000px; top:15px;">
     <input type="text" value="SERIES" id="TYPE" name="TYPE" hidden>
     <div class="input1234"  >
         <div class="input4" >
@@ -233,7 +233,7 @@
                 }
             </script>
             <div class="input1" >
-                <p>T<sub>amb</sub> &emsp;&nbsp;= <input type="number"; id="T_amb"; name="T_amb" value="{{T_amb}}" min="0" max="50" required>
+                <p>T<sub>amb</sub> &emsp;&nbsp;= <input type="number"; id="T_amb"; name="T_amb" value="{{T_amb}}" step="0.01" min="0" max="50" required>
                     <input type="text" id="prev" value="C" hidden>
                 <select name="T_amb_select" id="T_amb_select"  onchange="temp()">
                 <option value="C" >C</option>
@@ -286,7 +286,7 @@
             <p>RH<sub>amb</sub> &ensp;= <input type="number"; id="RH_amb"; name="RH_amb" step="0.01" value="{{RH_amb}}" min="0" max="0.99" required></p>
             </div>
             <div class="input3" >
-                <p>Altitude = <input type="number"; id="Altitude"; name="Altitude" value="{{Altitude}}" min="0" max="1000" required>
+                <p>Altitude = <input type="number"; id="Altitude"; name="Altitude" value="{{Altitude}}" step="0.01" min="0" max="1000" required>
                     <input type="text" id="prev4" value="M" hidden>
                   <select name="Altitude_type" id="Altitude_type" onchange="Alt()">
                     <option value="M">M</option>
@@ -300,12 +300,12 @@
                         var curent4=A_type.value;
                         var prev4 = document.getElementById("prev4");
                         if (prev4.value=="M" && A_type.value=="Feet"){
-                            output4.value = parseFloat(output4.value) *3.281;
-                            output4.setAttribute("max",parseFloat(output4.max)*3.281);
+                            output4.value = (parseFloat(output4.value) *3.281).toFixed(2);
+                            output4.setAttribute("max",(parseFloat(output4.max)*3.281).toFixed(2));
                             //document.getElementById("demo1").innerHTML = output.max;
                         }
                         else if(prev4.value=="Feet" && A_type.value=="M"){
-                            output4.value = parseFloat(output4.value) /3.281;
+                            output4.value = (parseFloat(output4.value) /3.281).toFixed(2);
                             output4.setAttribute("max",parseFloat(output4.max)/3.281);
                         }
                         else{
@@ -342,7 +342,7 @@
         }
     </script>
     <div class="T_in" >
-        <p>T<sub>IN</sub> = <input type="number"; id="T_in"; name="T_in"; min="0"; max="50"; value="{{T_in}}" required>
+        <p>T<sub>IN</sub> = <input type="number"; id="T_in"; name="T_in"; step="0.01"; min="0"; max="50"; value="{{T_in}}" required>
             <input type="text" id="prev1" value="C" hidden>
           <select name="Tw_in_select" id="Tw_in_select" onchange="Tw_in()">
             <option value="C" >C</option>
@@ -390,7 +390,7 @@
         }
     </script>
     <div class="T_out" >
-        <p>T<sub>OUT </sub> = <input type="number"; id="T_out"; name="T_out"; min="0"; max="87"; value="{{T_out}}" required>
+        <p>T<sub>OUT </sub> = <input type="number"; id="T_out"; name="T_out"; step="0.01"; min="0"; max="87"; value="{{T_out}}" required>
             <input type="text" id="prev2" value="C" hidden>
           <select name="Tw_out_select" id="Tw_out_select" onchange="Tw_out()">
             <option value="C" >C</option>
@@ -534,7 +534,7 @@
 </script>
 <div class="Q_oil_C" >
     <p>Q_oil &emsp;&nbsp;= <input type="number"; id="Q_oil"; name="Q_oil"; value="0" disabled>
-        <input type="text" id="prev6" value="kW" hidden>
+        <input type="text" id="prev7" value="kW" hidden>
       <select name="Q_oil_select" id="Q_oil_select" onchange="Q_oilF()">
         <option value="kW" >kW</option>
         <option value="W">W</option>
@@ -542,22 +542,22 @@
 </div>
 <script>
     document.getElementById("Q_oil_select").Q_oilF = function () {
-        var output6 = document.getElementById("Q_oil");
+        var output7 = document.getElementById("Q_oil");
         var Q_oil_type = document.getElementById("Q_oil_select");
-        var curent6=Q_oil_type.value;
-        var prev6 = document.getElementById("prev6");
-        if (prev6.value=="kW" && Q_oil_type.value=="W"){
-            output6.value = parseFloat(output6.value) *1000;
+        var curent7=Q_oil_type.value;
+        var prev7 = document.getElementById("prev7");
+        if (prev7.value=="kW" && Q_oil_type.value=="W"){
+            output7.value = parseFloat(output7.value) *1000;
         }
-        else if(prev6.value=="W" && Q_oil_type.value=="kW"){
-            output6.value = parseFloat(output6.value) /1000;
+        else if(prev7.value=="W" && Q_oil_type.value=="kW"){
+            output7.value = parseFloat(output7.value) /1000;
         }
         else{
-            output6.value = output6.value;
+            output7.value = output7.value;
         }
         //output.value = output.value + 273.15;
         //document.getElementById("demo1").innerHTML = prev.value;
-        prev6.setAttribute("value", Q_oil_type.value);
+        prev7.setAttribute("value", Q_oil_type.value);
     }
 </script>
 <!--p class="OT">Q_dot_1 :<span id="OT"></span> [kW]</p>
@@ -567,16 +567,40 @@
 <script >
     $(document).on('submit','#post-form',function(e){
         e.preventDefault();
-        var T_in=document.getElementById("T_in");
-        var T_out=document.getElementById("T_out");
-        var T_ambient=document.getElementById("T_amb");
+        var T_in=document.getElementById("T_in").value;
+        var T_in_u=document.getElementById("Tw_in_select").value;
+        var T_out=document.getElementById("T_out").value;
+        var T_out_u=document.getElementById("Tw_out_select").value;
+        var T_ambient=document.getElementById("T_amb").value;
+        var T_ambient_u=document.getElementById("T_amb_select").value;
         //document.getElementById("demo1").innerHTML = parseFloat(T_out.value)-parseFloat(T_in.value);
-        if (parseFloat(T_out.value)-parseFloat(T_in.value) < 5){
+        if(T_in_u=="K"){
+            T_in=T_in-273.15;
+        }
+        else if(T_in_u=="F"){
+            T_in=(T_in- 32)*(5/9);
+        }
+
+        if(T_out_u=="K"){
+            T_out=T_out-273.15;
+        }
+        else if(T_out_u=="F"){
+            T_out=(T_out- 32)*(5/9);
+        }
+        
+        if(T_ambient_u=="K"){
+            T_ambient=T_ambient-273.15;
+        }
+        else if(T_ambient_u=="F"){
+            T_ambient=(T_ambient- 32)*(5/9);
+        }
+
+        if (parseFloat(T_out)-parseFloat(T_in) < 5){
             alert("T_out should be atleast 5° greater than T_in");
         }
         else{
-            if (Math.abs(parseFloat(T_ambient.value)-parseFloat(T_in.value)) < 30){
-                alert("The difference betwwen T_amb and T_in should be greater than 30°.");
+            if (Math.abs(parseFloat(T_ambient)-parseFloat(T_in)) > 30){
+                alert("The difference between T_amb and T_in is greater than 30°.");
             }
             $.ajax({
                 type:'POST',
@@ -584,24 +608,40 @@
                 data:{
                     TYPE:$('#TYPE').val(),
                     T_amb:$('#T_amb').val(),
+                    T_amb_unit:$('#T_amb_select').val(),
                     RH_amb:$('#RH_amb').val(),
                     Altitude:$('#Altitude').val(),
+                    Altitude_unit:$('#Altitude_type').val(),
                     Model_id:$('#Model_id').val(),
                     P:$('#P_Range').val(),
                     Pr_type:$('input:radio[name=Pressure]:checked').val(),
                     T_in:$('#T_in').val(),
+                    T_in_unit:$('#Tw_in_select').val(),
                     T_out:$('#T_out').val(),
+                    T_out_unit:$('#Tw_out_select').val(),
                     CTD_ac:$('#CTD1_Range').val(),
                     CTD_ic:$('#CTD2_Range').val(),
                     csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
                 },
                 success:function(data){
-                    document.getElementById("Q_dot_1").value = (data.WF);
-                    document.getElementById("Q_dot_2").value = (data.ReH);
-                    document.getElementById("Q_oil").value = (data.DT);
-                    /*$('#OT').html(data.WF);
-                    $('#PT').html(data.ReH);
-                    $('#QT').html(data.DT);*/
+                    if(document.getElementById("Q_dot_1_select").value=="kW"){
+                        document.getElementById("Q_dot_1").value = data.Q_dot_1;
+                    }
+                    else{
+                        document.getElementById("Q_dot_1").value = data.Q_dot_1 *1000;
+                    }
+                    if(document.getElementById("Q_dot_2_select").value=="kW"){
+                        document.getElementById("Q_dot_2").value = data.Q_dot_2;
+                    }
+                    else{
+                        document.getElementById("Q_dot_2").value = data.Q_dot_2 *1000;
+                    }
+                    if(document.getElementById("Q_oil_select").value=="kW"){
+                        document.getElementById("Q_oil").value = data.Q_oil;
+                    }
+                    else{
+                        document.getElementById("Q_oil").value = data.Q_oil *1000;
+                    }
                 }
             });
         }

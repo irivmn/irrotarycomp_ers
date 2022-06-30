@@ -17,10 +17,10 @@ def M_DOT_H(T_,P_,omega_,Q,m_dot_a,m_dot_w,T_sat,Rho_a,h_a,h_w,C_p_a,Mu_a,k_a,Pr
         (Rho_a[137],C_p_a[137],Mu_a[137],k_a[137],Pr_a[137])=avgprop (Rho_a[125], C_p_a[125], Mu_a[125],k_a[125],Pr_a[125],Rho_a[150], C_p_a[150], Mu_a[150],k_a[150],Pr_a[150], 137)   # Inline IC AVG Props 
         Q_dot = ((m_dot_a[125] * h_a[125]) - (m_dot_a[150] * h_a[150])) + ((m_dot_w[150] * h_w[150]) - (m_dot_w[125] * h_w[125]))  #//Inline IC Total Heat Load 
     elif(Fluid=="Oil"):
-        (Rho_a[700],C_p_a[700],Mu_a[700],k_a[700],Pr_a[700])=ultracoolantprop (T_[700] )    #//Oil IN Props  
-        (Rho_a[710],C_p_a[710],Mu_a[710],k_a[710],Pr_a[710])=ultracoolantprop (T_[710] )    #//Oil Out Props 
-        avgprop (Rho_a[700],C_p_a[700],Mu_a[700],k_a[700],Pr_a[700],Rho_a[710],C_p_a[710],Mu_a[710],k_a[710],Pr_a[710],705)     #//Oil Avg Props  
-        Q_dot = m_dot_a[700]*C_p_a[705]*(T_[710]-T_[700])    #//Oil In Temperature  "Q_oil"
+        (Rho_a[125],C_p_a[125],Mu_a[125],k_a[125],Pr_a[125])=ultracoolantprop (T_[125] )    #//Oil IN Props  
+        (Rho_a[150],C_p_a[150],Mu_a[150],k_a[150],Pr_a[150])=ultracoolantprop (T_[150] )    #//Oil Out Props 
+        (Rho_a[137],C_p_a[137],Mu_a[137],k_a[137],Pr_a[137])=avgprop (Rho_a[125],C_p_a[125],Mu_a[125],k_a[125],Pr_a[125],Rho_a[150],C_p_a[150],Mu_a[150],k_a[150],Pr_a[150],137)     #//Oil Avg Props  
+        Q_dot = m_dot_a[125]*C_p_a[137]*(T_[150]-T_[125])    #//Oil In Temperature  "Q_oil"
     else:
         print("ERROR : Fluid not available..")
     return (T_,P_,omega_,Q_dot,m_dot_a,m_dot_w,T_sat,Rho_a,h_a,h_w,C_p_a,Mu_a,k_a,Pr_a)
@@ -44,10 +44,10 @@ def M_DOT_H_None(T_,P_,omega_,Q,m_dot_a,m_dot_w,T_sat,Rho_a,h_a,h_w,C_p_a,Mu_a,k
                     m_dot_max=m_dot_a[100]
                     m_dot_a[100] = (m_dot_min+m_dot_max)/2
     elif(Fluid=="Oil"):
-        (Rho_a[700],C_p_a[700],Mu_a[700],k_a[700],Pr_a[700])=ultracoolantprop (T_[700] )    #//Oil IN Props  
-        (Rho_a[710],C_p_a[710],Mu_a[710],k_a[710],Pr_a[710])=ultracoolantprop (T_[710] )    #//Oil Out Props 
-        avgprop (Rho_a[700],C_p_a[700],Mu_a[700],k_a[700],Pr_a[700],Rho_a[710],C_p_a[710],Mu_a[710],k_a[710],Pr_a[710],705)     #//Oil Avg Props  
-        Q_dot = m_dot_a[700]*C_p_a[705]*(T_[710]-T_[700])    #//Oil In Temperature  "Q_oil"
+        (Rho_a[125],C_p_a[125],Mu_a[125],k_a[125],Pr_a[125])=ultracoolantprop (T_[125] )    #//Oil IN Props  
+        (Rho_a[150],C_p_a[150],Mu_a[150],k_a[150],Pr_a[150])=ultracoolantprop (T_[150] )    #//Oil Out Props 
+        (Rho_a[137],C_p_a[137],Mu_a[137],k_a[137],Pr_a[137])=avgprop (Rho_a[125],C_p_a[125],Mu_a[125],k_a[125],Pr_a[125],Rho_a[150],C_p_a[150],Mu_a[150],k_a[150],Pr_a[150],137)     #//Oil Avg Props  
+        Q_dot = m_dot_a[125]*C_p_a[137]*(T_[150]-T_[125])    #//Oil In Temperature  "Q_oil"
     else:
         print("ERROR : Fluid not available..")
     return (T_,P_,omega_,Q_dot,m_dot_a,m_dot_w,T_sat,Rho_a,h_a,h_w,C_p_a,Mu_a,k_a,Pr_a)

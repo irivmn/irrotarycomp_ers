@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>ERS-Tool</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
     <style>
         .top{
@@ -108,8 +108,9 @@
 </head>
 {% block start %}
 <body style="background-color: white; " >
+    {% if user.is_superuser and user.is_authenticated %}
     <div class="top" >
-        <img src="https://github.com/Pavanc03/CERSTool/blob/main/static/Images/IR_logo.png?raw=true" class="avatar">
+        <img src="{% static 'Images\IR_logo.png' %}" class="avatar">
         <a href="{% url 'logout' %}"><b>Log-out</b></a>
     </div>
     <div class="buttons" >
@@ -118,6 +119,7 @@
         <button id="user_details" onclick="u_d()" style="color:black;">Users</button>
         <button id="CD26_airend_data" onclick="c_a_d()" style="color:black;">CD26 Airend Data</button>
         <button id="CD26_airend_data_rated" onclick="c_a_d_r()" style="color:black;">CD26 Airend Data Rated</button>
+        <a href="http://127.0.0.1:8000/admin" style="color:black; top: 9%;"><button> admin</button></a>
     </div>
     <script>
         function n_u() {
@@ -207,7 +209,8 @@
             <tr>
               <td><input type="text" name="userid" value="{{ i.UserID}}" maxlength="0" hidden><p>{{ i.UserID}}</p></td>
               <td><input type="text" name="email" value="{{ i.Email }}" maxlength="0" hidden><P>{{ i.Email }}</P></td>
-              <td><input type="submit" name="approve" value="Approve" class="button1"> &emsp; <input type="submit" name="approve" value="Reject" class="button2"></td>
+              <td><input type="submit" name="approve" value="Approve" class="button1" onclick="return confirm('Do you want to approve it?')"> &emsp; 
+                <input type="submit" name="approve" value="Reject" class="button2" onclick="return confirm('Do you want to reject it?')"></td>
               <!--td><button class="button1">✔</button>&emsp;<button class="button2">✘</button></td-->
             </tr>
             </form>
@@ -228,7 +231,8 @@
               <tr>
                 <td><input type="text" name="userid" value="{{ j.UserID}}" maxlength="0" hidden>{{ j.UserID}}</td>
                 <td><input type="text" name="email" value="{{ j.Email }}" maxlength="0" hidden>{{ j.Email }}</td>
-                <td><input type="submit" name="approve" value="Approve" class="button1"> &emsp; <input type="submit" name="approve" value="Reject" class="button2"></td>
+                <td><input type="submit" name="approve" value="Approve" class="button1" onclick="return confirm('Do you want to approve it?')"> &emsp; 
+                    <input type="submit" name="approve" value="Reject" class="button2" onclick="return confirm('Do you want to reject it?')"></td>
                 <!--td><button class="button1">✔</button>&emsp;<button class="button2">✘</button></td-->
               </tr>
               </form>
@@ -240,9 +244,10 @@
         <table>
             <tr>
               <th>User ID</th>
-              <th>First name</th>
-              <th>Last name</th>
-              <th>Email</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email ID</th>
+              <!--th>Delete User</th-->
               <!--th style="width: 150px;">Approval</th-->
             </tr>
             {% for ud in user_d %}
@@ -254,6 +259,7 @@
               <td><p>{{ ud.first_name}}</p></td>
               <td><p>{{ ud.last_name}}</p></td>
               <td><p>{{ ud.email }}</p></td>
+              <!--td><button typr="button" name="ud_delete" id="ud_delete" onclick="return confirm('Are you sure you want to delete it?')"> Delete </button></td-->
               <!--td><input type="submit" name="approve" value="Approve" > &emsp; <input type="submit" name="approve" value="Reject" ></td-->
               <!--td><button class="button1">✔</button>&emsp;<button class="button2">✘</button></td-->
             </tr>
@@ -275,9 +281,10 @@
               <th>Pr_ratio_stg2</th>
               <th>n_stg1</th>
               <th>n_stg2</th>
+              <!--th>Delete</th-->
             </tr>
             {% for cad in CD26_a_d %}
-            <form method="POST" action="Register_request">
+            <form method="POST" action="">
                 {% csrf_token %}
             <tr>
                 <td><p>{{ cad.Model_id}}</p></td>
@@ -290,6 +297,7 @@
                 <td><p>{{ cad.Pr_ratio_stg2}}</p></td>
                 <td><p>{{ cad.n_stg1}}</p></td>
                 <td><p>{{ cad.n_stg2}}</p></td>
+                <!--td><button typr="button" name="cd26_delete" id="cd26_delete" onclick="return confirm('Are you sure you want to delete it?')"> Delete </button></td-->
             </tr>
             </form>
             {% endfor %}
@@ -303,20 +311,26 @@
               <th>Rated P</th>
               <th>Max P</th>
               <th>Max T_W_out</th>
+              <!--th>Delete</th-->
             </tr>
             {% for cadr in CD26_a_d_r %}
-            <form method="POST" action="Register_request">
+            <form method="POST" action="">
                 {% csrf_token %}
             <tr>
                 <td><p>{{ cadr.Model_id}}</p></td>
                 <td><p>{{ cadr.rated_P}}</p></td>
                 <td><p>{{ cadr.Max}}</p></td>
                 <td><p>{{ cadr.T_W_out}}</p></td>
+                <!--td><button typr="button" name="cd26_r_delete" id="cd26_r_delete" onclick="return confirm('Are you sure you want to delete it?')"> Delete </button></td-->
             </tr>
             </form>
             {% endfor %}
           </table>
     </div>
+    {% else %}
+    <h2 style="position:absolute; left:3%; color:red;">Access Denied..</h2>
+    <a href="{% url 'Home' %}" style="position:absolute; left:2%; top:8%; color:red;"><b>Log in to continue.</b></a>
+    {% endif %}
 </body>
 {% endblock start%}
 

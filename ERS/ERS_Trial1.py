@@ -7,7 +7,7 @@ from ERS.convertion import convert
 from ERS.ultracoolantProp_direct import *
 from ERS.interpolation import *
 
-def ERS_TRIAL(T_amb_IN,RH_amb_IN,Altitude_ID,Model_id,P,Pr_type,TW_in,TW_out,CTD_ac,CTD_ic,M_data):
+def ERS_TRIAL(TYPE,T_amb_IN,RH_amb_IN,Altitude_ID,Model_id,P,Pr_type,TW_in,TW_out,CTD_ac,CTD_ic,M_data):
     Model_data={}
     m_dot_a={}
     m_dot_w={}
@@ -319,5 +319,5 @@ def ERS_TRIAL(T_amb_IN,RH_amb_IN,Altitude_ID,Model_id,P,Pr_type,TW_in,TW_out,CTD
 
     print(T_amb_IN,RH_amb_IN,Altitude_ID,Model_id,P,Pr_type,TW_in,TW_out,CTD_ac,CTD_ic)
     #print(M_data.P,M_data.p_S1,M_data.p_S2,M_data.FAD,M_data.Q_sh,M_data.Pr_ratio_stg1,M_data.Pr_ratio_stg2,M_data.n_stg1,M_data.n_stg1)
-    print(T_[125],T_[225],T_[150],T_[250])
+    print(T_[125],T_[225],T_[150],T_[250],TYPE)
     return (int(Q_dot_1/1000),int(Q_dot_2/1000),int(Q_oil/1000))

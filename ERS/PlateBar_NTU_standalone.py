@@ -32,6 +32,7 @@ def Platebar_NTU_standalone(T_H_IN,T_H_OUT,T_C_IN,T_C_OUT,m_dot_H,m_dot_C,Rho_a,
     Re_hs = (g_hs*Dh_hs)/Mu_a[Fluid_N[Fluid][1]]  #//Renolds Number Hot IC  
 
     Corelation_name="bergles"
+    print(Corelation_name,Fin_Name_Hot,W_hs, Hi_hs, t_hs, OL_hs,Re_hs,"------------------------")
     (Nu_j,f_hs,Factor)=choose_Corelation(Corelation_name,Fin_Name_Hot,W_hs, Hi_hs, t_hs, OL_hs,Re_hs)
     if(Factor=="N"):
         alpha_hs = (Nu_j*k_avg)/Dh_cs  #//Cold side Nussult Coefficient of heat transfer

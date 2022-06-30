@@ -1,0 +1,395 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERS-Tool</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    <style>
+        .avatar {
+            width: 200px;
+            height: 50px;
+            border-radius: 0%;
+            position: absolute;
+            left: 2%;
+        }
+        a{
+            text-decoration: none;
+            color: rgb(228, 4, 4);
+            font-size: 16px;
+            font-family: "Lucida Console", "Courier New", monospace;
+            position: absolute;
+            top:15px;
+            left: 91%;
+            margin:8px;
+            border: none; 
+            
+        }
+        .top{
+            background-color: rgb(254, 242, 242);
+            border: solid;
+            border-color: rgb(139, 138, 138);
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            height: 50px;
+        }
+        .input1234{
+            position: absolute;
+            width: 50%;
+            height: 50%;
+        }
+        .input1234 input[type="number"]{
+            width:50px;
+            height: 15px;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+        .input1234 select{
+            width: 40px;
+            height: 20px;
+            font-size: 14px;
+        }
+        .input1234 input[type="submit"]{
+            color:red;
+        }
+        .bg2{
+            position: absolute;
+            left:67%;
+            top:10%;
+            font-size: 18px;
+        }
+        .bg_img{
+            position: absolute;
+            left:20%;
+            top:15%;
+        }
+        p{
+            font-size: 15px;
+        }
+        .hotside{
+            position:absolute;
+            top: 10%;
+            left:4%;
+            width:40%
+        }
+        .coldside{
+            position:absolute;
+            top: 10%;
+            left:35%;
+            width:50%;
+        }.RH_amb{
+            position:absolute;
+            left:60%;
+            top:10%;
+        }
+        .fin_geometry{
+            position:absolute;
+            width:50%;
+            left:4%;
+            top:60%;
+        }
+        .Q{
+            position:absolute;
+            left:25%;
+        }
+        .index1{
+            position:absolute;
+            left:15%;
+        }
+        .index2{
+            position:absolute;
+            left:45%;
+        }
+        .title2{
+            position: relative;
+            left:35%;
+            color:red;
+        }
+        h5{
+            color:red;
+        }
+        .Fin_Name_Cold{
+            position:absolute;
+            top:44%;
+            left:75%;
+        }
+        .Fin_Name_Hot{
+            position:absolute;
+            top:44%;
+            left:25%;
+        }
+        .N_pass_hs{
+            position:absolute;
+            top:54%;
+            left:25%;
+        }
+        .N_pass_cs{
+            position:absolute;
+            top:54%;
+            left:75%;
+        }
+        .fin_input{
+            position: relative;
+            left:35%;
+        }
+        .output_hot{
+            position:absolute;
+            top:17%;
+            left:55%;
+        }
+        .output_cold{
+            position:absolute;
+            top:17%;
+            left:135%;
+        }
+        .bg2 input[type="number"]{
+            width:80px;
+            height: 15px;
+            
+        }
+        .Weight_Cls{
+            position:relative;
+            top:80px;
+            left:55%;
+        }
+        .title3{
+            position:absolute;
+            top:63%;
+            left:5%;
+        }
+        .Calculate{
+            position: absolute;
+            top:5%;
+            left:158%;
+            display: block;
+        }
+        .fin_auto{
+            position: absolute;
+            top:50%;
+            left:60%;
+        }
+    </style>
+</head>
+{% block start %}
+<body style="background-color: white; " >
+    <div class="top" >
+        <img src="{% static 'Images\IR_logo.png' %}" class="avatar">
+        <a href="{% url 'logout' %}"><b>Log-out</b></a>
+    </div>
+<div class="bg">
+    <img src="{% static 'Images\Capture.PNG' %}" class="bg_img">
+    <div class="input1234" id="input1234">
+        <form id="post-form">
+        {% csrf_token %}
+        <h5 class="index1">Hot</h5><h5 class="index2">Cold</h5>
+        <div class="Q" >
+            <p>Q = <input type="number"; id="Q"; name="Q" step="0.01" value="" style="width:60px" required> W</p>
+        </div>  
+        <div class="hotside">
+            <div>
+                <p>Fluid = <select name="Fluid" id="Fluid" style="width:100px;">
+                    <option value="compressed_air">Compressed Air</option>
+                    <option value="Oil">Oil</option>
+                </select></p>
+            </div>
+            <div class="T_H_In" >
+                <p>T_In = <input type="number"; id="T_H_In"; name="T_H_In" step="0.01" value="{{T_H_In}}" required> C </p>
+            </div>
+            <div class="P" >
+                <p>P = <input type="number"; id="P"; name="P" step="0.01" value="{{P}}" required> bar </p>
+            </div>
+            <div class="FAD" >
+                <p>FAD = <input type="number"; id="FAD"; name="FAD" step="0.01" value="{{FAD}}" required> M3/hr </p>
+            </div>
+        </div>
+        <div class="coldside">
+            <div class="T_amb" >
+                <p>T<sub>amb</sub> &emsp;&nbsp;= <input type="number"; id="T_amb"; step="0.01" name="T_amb" value="{{T_amb}}" required>
+                  <!--select name="Temp" id="temp" name="'temp">
+                    <option value="C" >C</option>
+                    <option value="F">F</option>
+                    <option value="K">K</option>
+                  </select--> C </p>
+                </div>
+                <div class="Altitude" >
+                    <p>Altitude = <input type="number"; id="Altitude"; name="Altitude" step="0.01" value="{{Altitude}}" required>
+                      <!--select name="meter" id="meter" name="meter">
+                        <option value="m">M</option>
+                        <option value="mm">MM</option>
+                        <option value="cm">CM</option>
+                      </select--> M </p>
+                </div>
+                <div class="M_dot_C" >
+                    <p>M_dot_C = <input type="number"; id="M_dot_C"; name="M_dot_C" step="0.01" value="{{M_dot_C}}" required> kg/s</p>
+                </div>
+                <div class="Delta_preheat" >
+                    <p>Delta_preheat = <input type="number"; id="Delta_preheat"; step="0.01" name="Delta_preheat" value="{{Delta_preheat}}" required></p>
+                </div>
+        </div>
+        <div class="RH_amb" >
+            <p>RH<sub>amb</sub> &ensp;= <input type="number"; id="RH"; name="RH_amb" step="0.01" value="{{RH_amb}}" required> fraction </p>
+        </div>
+        <input type="submit" name="demo1_sub" value="Calculate" class="Calculate">
+        <div class="fin_geometry">
+            <h3 class="title2">Geometry details</h3>
+            <div class="input_type">
+                <p style="font-size: 14px;"><input type="radio"  id="Auto" name="input_type" value="Auto" onclick="ShowHideDiv2()" required>Auto</p>
+                <p style="font-size: 14px;"><input type="radio"  id="Manual" name="input_type" value="Manual" onclick="ShowHideDiv1()" required>Manual</p>
+            </div>
+            <!--p id="demo1"></p-->
+            <script>
+                function ShowHideDiv1() {
+                    var chkYes1 = document.getElementById("Manual");
+                    if (chkYes1.checked){
+                        document.getElementById("fin_auto").style.display = "none" ;
+                        document.getElementById("fin_manual").style.display = "block" ;
+                        //document.getElementById("demo1").innerHTML = chkYes1.value;
+                    }
+                }
+                function ShowHideDiv2() {
+                    var chkYes2 = document.getElementById("Auto");
+                    if (chkYes2.checked){
+                        document.getElementById("fin_auto").style.display = "block" ;
+                        document.getElementById("fin_manual").style.display = "none" ;
+                        //document.getElementById("demo1").innerHTML = chkYes2.value;
+                    }
+                }
+            </script>
+            <div class="fin_auto"  id="fin_auto" style="display:none;">
+                <select name="Fin_Name_DS" id="Fin_Name_DS" style="width:150px;">
+                    <option value="1">987654321</option>
+                    <option value="2">243576854</option>
+                    <option value="3">354758689</option>
+                    <!--{% for i in Fin_Name_DS %}
+                        <option value="{{i.Fin_Name_DS}}">{{i.Fin_Name_DS}}</option>
+                    {% endfor %}-->
+                    </select>
+            </div>
+            <div class="fin_manual"  id="fin_manual" style="display:none;">
+                <p>Fin_Name </p>
+                <div class="Fin_Name_Hot" >
+                    <select name="Fin_Name_Hot" id="Fin_Name_Hot" style="width:150px;">
+                    {% for i in fin_details %}
+                        <option value="{{i.fin_name}}">{{i.fin_name}}</option>
+                    {% endfor %}
+                    </select>
+                </div> 
+                <div class="Fin_Name_Cold" >
+                    <select name="Fin_Name_Cold" id="Fin_Name_Cold" style="width:150px;">
+                    {% for i in fin_details %}
+                        <option value="{{i.fin_name}}">{{i.fin_name}}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                
+                <p>N_pass</p>
+                <div class="N_pass_hs" >
+                    <select name="N_pass_hs" id="N_pass_hs" style="width:150px;">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+                <div class="N_pass_cs" >
+                    <select name="N_pass_cs" id="N_pass_cs" style="width:150px;">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+                
+            <div class="fin_input">
+                <div class="L_core" >
+                    <p>L_core = <input type="number"; id="L_core"; name="L_core" step="0.01" value="{{L_core}}" required> mm </p>
+                </div>
+                <div class="T_core" >
+                    <p>T_core = <input type="number"; id="T_core"; name="T_core" step="0.01" value="{{T_core}}" required> mm </p>
+                </div>
+                <div class="n_coldrows" >
+                    <p>n_coldrows = <input type="number"; id="n_coldrows"; name="n_coldrows" value="{{n_coldrows}}" required></p>
+                </div>
+            </div>
+        </div>
+        
+        </form>
+    </div>
+    
+</div>
+<div class="bg2">
+    <br><br><br>
+    <div class="title3">
+        <p>T_Out</p>
+        <p>Delta_P</p>
+    </div>
+    <div class="output_hot">
+        <h5>&emsp;&emsp; Hot </h5>
+        <div class="T_H_Out_Cls" >
+            <input type="number"; id="T_H_Out"; name="T_H_Out" value="0" disabled>
+            <span style="position : absolute; top:60%;"> C </span>
+        </div>
+        <div class="Delta_P_hs_Cls" >
+            <input type="number"; id="Delta_P_hs"; name="Delta_P_hs" value="0" disabled>
+        </div>
+    </div>
+    <div class="output_cold">
+        <h5>&emsp;&ensp; Cold</h5>
+        <div class="T_C_Out_Cls" >
+            <input type="number"; id="T_C_Out"; name="T_C_Out" value="0" disabled>
+            <span style="position : absolute; top:60%;"> C </span>
+        </div>
+        <div class="Delta_P_cs_Cls" >
+            <input type="number"; id="Delta_P_cs"; name="Delta_P_cs" value="0" disabled>
+        </div>
+    </div>
+    <div class="Weight_Cls" >
+        <p>Weight = <input type="number"; id="Weight"; name="Weight" value="0" disabled> kg</p>
+    </div>
+</div>
+<script >
+    $(document).on('submit','#post-form',function(e){
+        e.preventDefault();
+        $.ajax({
+            type:'POST',
+            url:'/Standalone_Plate&Bar',
+            data:{
+                Fluid:$('#Fluid').val(),
+                T_amb:$('#T_amb').val(),
+                RH_amb:$('#RH').val(),
+                Altitude:$('#Altitude').val(),
+                FAD:$('#FAD').val(),
+                T_H_In:$('#T_H_In').val(),
+                P:$('#P').val(),
+                Q:$('#Q').val(),
+                Delta_preheat:$('#Delta_preheat').val(),
+                M_dot_C:$('#M_dot_C').val(),
+                L_core:$('#L_core').val(),
+                T_core:$('#T_core').val(),
+                N_pass_cs:$('#N_pass_cs').val(),
+                N_pass_hs:$('#N_pass_hs').val(),
+                n_coldrows:$('#n_coldrows').val(),
+                Fin_Name_Cold:$('#Fin_Name_Cold').val(),
+                Fin_Name_Hot:$('#Fin_Name_Hot').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                },
+            success:function(data){
+                document.getElementById("Q").value = data.Q;
+                document.getElementById("T_H_Out").value = data.T_H;
+                document.getElementById("T_C_Out").value = data.T_C;
+                document.getElementById("Delta_P_hs").value = data.D_H;
+                document.getElementById("Delta_P_cs").value = data.D_C;
+                document.getElementById("Weight").value = data.Weight;
+            }
+        });
+    });
+</script>
+
+</body>
+{% endblock start%}
+
+</html>

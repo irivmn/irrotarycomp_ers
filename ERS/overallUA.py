@@ -1,6 +1,6 @@
 from cmath import tanh
 
-def overallucoeff (alpha_cs, t_cs,H_cs, As_cs,At_cs,alpha_hs,t_hs,H_hs,As_hs,At_hs,FA_cs,FA_hs): #: UA_hs,UA_cs,UA)   
+def overallucoeff (alpha_cs, t_cs,H_cs, As_cs,At_cs,alpha_hs,t_hs,H_hs,As_hs,At_hs,FA_cs,FA_hs): #: UA_hs,UA_cs,UA)  
     k_cs = 192 #[W/m C]  
     m_cs = pow(((2*alpha_cs)/(k_cs*t_cs)),(1/2))
     eta_f_cs = (tanh(m_cs*H_cs*0.5)/(m_cs*H_cs*0.5)).real                 

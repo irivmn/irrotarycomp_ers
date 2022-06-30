@@ -44,3 +44,11 @@ class CD26_airend_data_rated(models.Model):
     rated_P=models.FloatField()
     Max=models.FloatField(default=0)
     T_W_out=models.FloatField(default=0)
+
+class Fin_parameters(models.Model):
+    fin_name=models.CharField(max_length=100,default=None)
+    H=models.FloatField(default=0)
+    t=models.FloatField(default=0)
+    lambda_2=models.FloatField(default=0)
+    OL=models.FloatField(default=0)
+    FinType=models.CharField(max_length=100,default=None)
