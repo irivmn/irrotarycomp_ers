@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    <style>
+        .avatar {
+            width: 200px;
+            height: 50px;
+            border-radius: 0%;
+            position: absolute;
+            left: 2%;
+        }
+        a{
+            text-decoration: none;
+            color: rgb(228, 4, 4);
+            font-size: 16px;
+            font-family: "Lucida Console", "Courier New", monospace;
+            position: absolute;
+            top:15px;
+            left: 91%;
+            margin:8px;
+            border: none; 
+            
+        }
+        .top{
+            background-color: rgb(254, 242, 242);
+            border: solid;
+            border-color: rgb(139, 138, 138);
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            height: 50px;
+        }
+        .input1234{
+            position: relative;
+            width: 100%;
+            left:39px;
+            top:30px;
+            font-size: 18px;
+        }
+        .input1234 input[type="number"]{
+            width:40px;
+            height: 20px;
+            
+        }
+        .input1234 select{
+            width: 40px;
+            height: 17px;
+            font-size: 14px;
+        }
+        .bg2{
+            position: absolute;
+            left:50%;
+            top:17%;
+            font-size: 18px;
+        }
+    </style>
+</head>
+{% block start %}
+<body style="background-color: white; " >
+    <div class="top" >
+        <img src="{% static 'Images\IR_logo.png' %}" class="avatar">
+        <a href=""><b>Log-out</b></a>
+    </div>
+<div class="bg">
+    <div class="input1234" id="input1234">
+        <form method="POST" action="demo1">
+        {% csrf_token %}
+        <h3>Give Input:</h3>
+        <div class="input1" >
+        <p>T<sub>amb</sub> &emsp;&nbsp;= <input type="number"; id="T_amb"; name="T_amb" value="{{T_amb}}" >
+          <select name="Temp" id="temp" name="'temp">
+            <option value="C" >C</option>
+            <option value="F">F</option>
+            <option value="K">K</option>
+          </select></p>
+        </div>
+        <div class="input2" >
+        <p>RH<sub>amb</sub> &ensp;= <input type="number"; id="RH"; name="RH_amb" step="0.01" value="{{RH_amb}}"></p>
+        </div>
+        <div class="input3" >
+        <p>Altitude = <input type="number"; id="Altitude"; name="Altitude" value="{{Altitude}}">
+          <select name="meter" id="meter" name="meter">
+            <option value="m">M</option>
+            <option value="mm">MM</option>
+            <option value="cm">CM</option>
+          </select></p>
+        </div>
+        <div class="HCA" >
+            <p>HCA =  &ensp;= <input type="text" id="HCA" name="HCA"  value="{{HCA}}" style="width:40px; height: 20px;"></p>
+            </div>
+        <input type="submit" name="demo1_sub" value="Calculate" onclick="ajax_send_otp()">
+        </form>
+    </div>
+    
+</div>
+<div class="bg2">
+    <div class="output1234"  >
+        <h3>Output:</h3>
+        <p>Q = {{Q}}</p>
+        <p>Weight = {{Weight}}</p>
+    </div>
+</div>
+
+<script>
+    var otp_from_back="";
+    function ajax_send_otp(){
+       document.getElementById("");
+       T_amb = document.getElementById("T_amb");
+       RH_amb= document.getElementById("RH_amb");
+       Altitude= document.getElementById("Altitude");
+       
+     $.post("/send_otp",
+         {
+             "T_amb":T_amb.value,
+             "RH_amb":RH_amb.value,
+             "Altitude":Altitude.value,
+             "csrfmiddlewaretoken":"{{csrf_token}}"
+         },
+         function(data, status){
+             if(status=="success"){
+                 otp_from_back = data;
+                 document.getElementById("input1234").innerHTML=T_amb.value;
+                 }
+    }
+    );}
+</script>
+</body>
+{% endblock start%}
+
+</html>

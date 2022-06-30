@@ -1,0 +1,323 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    <style>
+        .top{
+            background-color: rgb(254, 242, 242);
+            border: solid;
+            border-color: rgb(139, 138, 138);
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            height: 50px;
+        }
+        .avatar {
+            width: 200px;
+            height: 50px;
+            border-radius: 0%;
+            position: absolute;
+            left: 2%;
+        }
+        a{
+            text-decoration: none;
+            color: rgb(228, 4, 4);
+            font-size: 16px;
+            font-family: "Lucida Console", "Courier New", monospace;
+            position: absolute;
+            top:15px;
+            left: 91%;
+            margin:8px;
+            border: none; 
+        }
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            position: relative;
+            width: 80%;
+            left:10%;
+        }
+          
+        td{
+            border: 1px solid #dddddd;
+            text-align: center;
+            height: 5px;
+            background-color: #fcf3f3;
+        }
+        th {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 10px;
+            background-color: #fdd0d0;
+        }
+        .button1{
+            color: rgb(126, 207, 5);
+        }
+        .button2{
+            color: rgb(207, 5, 5);
+        }
+        .new_user_div{
+            padding:20px;
+            padding-top: 0px;
+            
+        }
+        .new_user_div input[type='text']{
+            border: none;
+            background-color: white;
+        }
+        .reset_psw_div{
+            padding:20px;
+            padding-top: 0px;
+        }
+        .reset_psw_div input[type='text']{
+            border: none;    
+        }
+        .user_details_div{
+            padding:20px;
+            padding-top: 0px;
+        }
+        .CD26_airend_data_div{
+            padding:20px;
+            padding-top: 0px;
+        }
+        .CD26_airend_data_rated_div{
+            padding:20px;
+            padding-top: 0px;
+        }
+        .buttons button{
+            background-color: white;
+            border-color: rgb(227, 174, 174);
+        }
+        .buttons{
+            padding:4px;
+            padding-left: 0px;
+        }
+        h4{
+            color: red;
+            text-decoration-line: underline;
+        }
+    </style>
+</head>
+{% block start %}
+<body style="background-color: white; " >
+    <div class="top" >
+        <img src="https://github.com/Pavanc03/CERSTool/blob/main/static/Images/IR_logo.png?raw=true" class="avatar">
+        <a href="{% url 'logout' %}"><b>Log-out</b></a>
+    </div>
+    <div class="buttons" >
+        <button id="new_user" onclick="n_u()" style="color:red;">New Users</button>
+        <button id="reset_psw" onclick="r_p()" style="color:black;">Reset Password</button>
+        <button id="user_details" onclick="u_d()" style="color:black;">Users</button>
+        <button id="CD26_airend_data" onclick="c_a_d()" style="color:black;">CD26 Airend Data</button>
+        <button id="CD26_airend_data_rated" onclick="c_a_d_r()" style="color:black;">CD26 Airend Data Rated</button>
+    </div>
+    <script>
+        function n_u() {
+            document.getElementById("new_user").style.color = "red" ;
+            document.getElementById("new_user_div").style.display = "block" ;
+            document.getElementById("reset_psw").style.color = "black" ;
+            document.getElementById("reset_psw_div").style.display = "none" ;
+            document.getElementById("user_details").style.color = "black" ;
+            document.getElementById("user_details_div").style.display = "none" ;
+            document.getElementById("CD26_airend_data").style.color = "black" ;
+            document.getElementById("CD26_airend_data_div").style.display = "none" ;
+            document.getElementById("CD26_airend_data_rated").style.color = "black" ;
+            document.getElementById("CD26_airend_data_rated_div").style.display = "none" ;
+        }
+        function r_p() {
+            document.getElementById("new_user").style.color = "black" ;
+            document.getElementById("new_user_div").style.display = "none" ;
+            document.getElementById("reset_psw").style.color = "red" ;
+            document.getElementById("reset_psw_div").style.display = "block" ;
+            document.getElementById("user_details").style.color = "black" ;
+            document.getElementById("user_details_div").style.display = "none" ;
+            document.getElementById("CD26_airend_data").style.color = "black" ;
+            document.getElementById("CD26_airend_data_div").style.display = "none" ;
+            document.getElementById("CD26_airend_data_rated").style.color = "black" ;
+            document.getElementById("CD26_airend_data_rated_div").style.display = "none" ;
+        }
+        function u_d() {
+            document.getElementById("new_user").style.color = "black" ;
+            document.getElementById("new_user_div").style.display = "none" ;
+            document.getElementById("reset_psw").style.color = "black" ;
+            document.getElementById("reset_psw_div").style.display = "none" ;
+            document.getElementById("user_details").style.color = "red" ;
+            document.getElementById("user_details_div").style.display = "block" ;
+            document.getElementById("CD26_airend_data").style.color = "black" ;
+            document.getElementById("CD26_airend_data_div").style.display = "none" ;
+            document.getElementById("CD26_airend_data_rated").style.color = "black" ;
+            document.getElementById("CD26_airend_data_rated_div").style.display = "none" ;
+        }
+        function h_d() {
+            document.getElementById("new_user").style.color = "black" ;
+            document.getElementById("new_user_div").style.display = "none" ;
+            document.getElementById("reset_psw").style.color = "black" ;
+            document.getElementById("reset_psw_div").style.display = "none" ;
+            document.getElementById("user_details").style.color = "black" ;
+            document.getElementById("user_details_div").style.display = "none" ;
+            document.getElementById("CD26_airend_data").style.color = "black" ;
+            document.getElementById("CD26_airend_data_div").style.display = "none" ;
+            document.getElementById("CD26_airend_data_rated").style.color = "black" ;
+            document.getElementById("CD26_airend_data_rated_div").style.display = "none" ;
+        }
+        function c_a_d() {
+            document.getElementById("new_user").style.color = "black" ;
+            document.getElementById("new_user_div").style.display = "none" ;
+            document.getElementById("reset_psw").style.color = "black" ;
+            document.getElementById("reset_psw_div").style.display = "none" ;
+            document.getElementById("user_details").style.color = "black" ;
+            document.getElementById("user_details_div").style.display = "none" ;
+            document.getElementById("CD26_airend_data").style.color = "red" ;
+            document.getElementById("CD26_airend_data_div").style.display = "block" ;
+            document.getElementById("CD26_airend_data_rated").style.color = "black" ;
+            document.getElementById("CD26_airend_data_rated_div").style.display = "none" ;
+        }
+        function c_a_d_r() {
+            document.getElementById("new_user").style.color = "black" ;
+            document.getElementById("new_user_div").style.display = "none" ;
+            document.getElementById("reset_psw").style.color = "black" ;
+            document.getElementById("reset_psw_div").style.display = "none" ;
+            document.getElementById("user_details").style.color = "black" ;
+            document.getElementById("user_details_div").style.display = "none" ;
+            document.getElementById("CD26_airend_data").style.color = "black" ;
+            document.getElementById("CD26_airend_data_div").style.display = "none" ;
+            document.getElementById("CD26_airend_data_rated").style.color = "red" ;
+            document.getElementById("CD26_airend_data_rated_div").style.display = "block" ;
+        }
+    </script>
+    <div class="new_user_div" id="new_user_div" style="display:block">
+        <h4 style="padding-bottom:0px;">New user request : </h4>
+        <table>
+            <tr>
+              <th>User ID</th>
+              <th>Email</th>
+              <th style="width: 150px;">Approval</th>
+            </tr>
+            {% for i in Reg_app %}
+            <form method="POST" action="Register_request">
+                {% csrf_token %}
+            <tr>
+              <td><input type="text" name="userid" value="{{ i.UserID}}" maxlength="0" hidden><p>{{ i.UserID}}</p></td>
+              <td><input type="text" name="email" value="{{ i.Email }}" maxlength="0" hidden><P>{{ i.Email }}</P></td>
+              <td><input type="submit" name="approve" value="Approve" class="button1"> &emsp; <input type="submit" name="approve" value="Reject" class="button2"></td>
+              <!--td><button class="button1">✔</button>&emsp;<button class="button2">✘</button></td-->
+            </tr>
+            </form>
+            {% endfor %}
+          </table>
+    </div>
+    <div class="reset_psw_div" id="reset_psw_div" style="display:none">
+        <h4 style="padding-bottom:0px;">Reset password request :</h4>
+        <table>
+            <tr>
+                <th>User ID</th>
+                <th>Email</th>
+                <th style="width: 150px;">Approval</th>
+              </tr>
+              {% for j in Ret_app %}
+              <form method="POST" action="Reset_pwd_request">
+                  {% csrf_token %}
+              <tr>
+                <td><input type="text" name="userid" value="{{ j.UserID}}" maxlength="0" hidden>{{ j.UserID}}</td>
+                <td><input type="text" name="email" value="{{ j.Email }}" maxlength="0" hidden>{{ j.Email }}</td>
+                <td><input type="submit" name="approve" value="Approve" class="button1"> &emsp; <input type="submit" name="approve" value="Reject" class="button2"></td>
+                <!--td><button class="button1">✔</button>&emsp;<button class="button2">✘</button></td-->
+              </tr>
+              </form>
+              {% endfor %}
+          </table>
+    </div>
+    <div class="user_details_div" id="user_details_div" style="display:none">
+        <h4 style="padding-bottom:0px;">User Details : </h4>
+        <table>
+            <tr>
+              <th>User ID</th>
+              <th>First name</th>
+              <th>Last name</th>
+              <th>Email</th>
+              <!--th style="width: 150px;">Approval</th-->
+            </tr>
+            {% for ud in user_d %}
+            <form method="POST" action="">
+                {% csrf_token %}
+            <tr>
+              <!--td><input type="text" name="userid" value="{{ ud.username}}" maxlength="0"></td-->
+              <td><p>{{ ud.username}}</p></td>
+              <td><p>{{ ud.first_name}}</p></td>
+              <td><p>{{ ud.last_name}}</p></td>
+              <td><p>{{ ud.email }}</p></td>
+              <!--td><input type="submit" name="approve" value="Approve" > &emsp; <input type="submit" name="approve" value="Reject" ></td-->
+              <!--td><button class="button1">✔</button>&emsp;<button class="button2">✘</button></td-->
+            </tr>
+            </form>
+            {% endfor %}
+          </table>
+    </div>
+    <div class="CD26_airend_data_div" id="CD26_airend_data_div" style="display:none">
+        <h4 style="padding-bottom:0px;">CD26 Airend Data : </h4>
+        <table>
+            <tr>
+              <th>Model ID</th>
+              <th>P</th>
+              <th>p_S1</th>
+              <th>p_S2</th>
+              <th>FAD</th>
+              <th>Q_sh</th>
+              <th>Pr_ratio_stg1</th>
+              <th>Pr_ratio_stg2</th>
+              <th>n_stg1</th>
+              <th>n_stg2</th>
+            </tr>
+            {% for cad in CD26_a_d %}
+            <form method="POST" action="Register_request">
+                {% csrf_token %}
+            <tr>
+                <td><p>{{ cad.Model_id}}</p></td>
+                <td><p>{{ cad.P}}</p></td>
+                <td><p>{{ cad.p_S1}}</p></td>
+                <td><p>{{ cad.p_S2}}</p></td>
+                <td><p>{{ cad.FAD}}</p></td>
+                <td><p>{{ cad.Q_sh}}</p></td>
+                <td><p>{{ cad.Pr_ratio_stg1}}</p></td>
+                <td><p>{{ cad.Pr_ratio_stg2}}</p></td>
+                <td><p>{{ cad.n_stg1}}</p></td>
+                <td><p>{{ cad.n_stg2}}</p></td>
+            </tr>
+            </form>
+            {% endfor %}
+          </table>
+    </div>
+    <div class="CD26_airend_data_rated_div" id="CD26_airend_data_rated_div" style="display:none">
+        <h4 style="padding-bottom:0px;">CD26 Airend Data Rated : </h4>
+        <table>
+            <tr>
+              <th>Model ID</th>
+              <th>Rated P</th>
+              <th>Max P</th>
+              <th>Max T_W_out</th>
+            </tr>
+            {% for cadr in CD26_a_d_r %}
+            <form method="POST" action="Register_request">
+                {% csrf_token %}
+            <tr>
+                <td><p>{{ cadr.Model_id}}</p></td>
+                <td><p>{{ cadr.rated_P}}</p></td>
+                <td><p>{{ cadr.Max}}</p></td>
+                <td><p>{{ cadr.T_W_out}}</p></td>
+            </tr>
+            </form>
+            {% endfor %}
+          </table>
+    </div>
+</body>
+{% endblock start%}
+
+</html>

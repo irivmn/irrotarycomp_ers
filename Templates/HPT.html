@@ -1,0 +1,617 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERS-Tool</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    <style>
+        .avatar {
+            width: 200px;
+            height: 50px;
+            border-radius: 0%;
+            position: absolute;
+            left: 2%;
+        }
+        a{
+            text-decoration: none;
+            color: rgb(228, 4, 4);
+            font-size: 16px;
+            font-family: "Lucida Console", "Courier New", monospace;
+            position: absolute;
+            top:15px;
+            left: 91%;
+            margin:8px;
+            border: none; 
+            
+        }
+        .top{
+            background-color: rgb(254, 242, 242);
+            border: solid;
+            border-color: rgb(139, 138, 138);
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            height: 50px;
+        }
+        .pressure{
+            position: absolute;
+            height: 75px;
+            width: 130px;
+            left:38%;
+            top:1px;
+            border:solid;
+            border-color: whitesmoke;
+            background-color: whitesmoke;
+            font-size: 16px;
+            margin: 2px;
+        }
+        .bg {
+            position: absolute;
+            top:10%;
+          }
+        .input1234{
+            position: absolute;
+            width: 20%;
+            top:10px;
+            font-size: 12px;
+        }
+        .input1234 input[type="number"]{
+            width:40px;
+            height: 12px;
+            
+        }
+        .input1234 select{
+            width: 40px;
+            height: 17px;
+            font-size: 14px;
+        }
+        .T_in{
+            font-size: 12px;
+            width:250px;
+            position: absolute;
+            left:97%;
+            top:29%;
+        }
+        .T_in input[type="number"]{
+            width:40px;
+            height: 12px;
+        }
+        .T_out{
+            font-size: 12px;
+            width:250px;
+            position: absolute;
+            left:97%;
+            top:60%;
+        }
+        .T_out input[type="number"]{
+            width:40px;
+            height: 12px;
+        }
+        .Pka{
+            font-size: 12px;
+            width:200px;
+            position: absolute;
+            left:20%;
+            top:0%;
+        }
+        .Pka p{
+            position: relative;
+            left:30px;
+        }
+        .Pka input{
+            position: absolute;
+            top:25px;
+        }
+        .bg_image{
+            position:relative;
+            width:1000px;
+            height:500px;
+            left:25px;
+        }
+        .calculate{
+            position: absolute;
+            right:5%;
+            top:7%;
+        }
+        .CTD_AC{
+            font-size: 12px;
+            width:200px;
+            position: absolute;
+            left:77%;
+            top:65%;
+        }
+        .CTD_AC p{
+            position: relative;
+            left:30px;
+        }
+        .CTD_AC input{
+            position: absolute;
+            top:25px;
+        }
+        .CTD_IC{
+            font-size: 12px;
+            width:200px;
+            position: absolute;
+            left:45%;
+            top:65%;
+        }
+        .CTD_IC p{
+            position: relative;
+            left:30px;
+        }
+        .CTD_IC input{
+            position: absolute;
+            top:25px;
+        }
+        .output{
+            position:absolute;
+        }
+        .Q_dot_1C{
+            position: absolute;
+            left:78%;
+            top: 10%;
+            color:red;
+        }
+        .Q_dot_1C input[type="number"]{
+            width:80px;
+            height: 12px;
+        }
+        .Q_dot_2C{
+            position: absolute;
+            left:78%;
+            top: 14%;
+            color:red;
+        }
+        .Q_dot_2C input[type="number"]{
+            width:80px;
+            height: 12px;
+        }
+        .Q_oil_C{
+            position: absolute;
+            left:78%;
+            top: 18%;
+            color:red;
+        }
+        .Q_oil_C input[type="number"]{
+            width:80px;
+            height: 12px;
+        }
+    </style>
+</head>
+{% block start %}
+<body style="background-color: white; " >
+    {% if user.is_authenticated %}
+    <div class="top" >
+        <img src="https://github.com/Pavanc03/CERSTool/blob/main/static/Images/IR_logo.png?raw=true" class="avatar">
+        <a href="{% url 'logout' %}"><b>Log-out</b></a>
+    </div>
+<div class="bg">
+<form id="post-form">
+    {% csrf_token %}
+    <img src="https://github.com/Pavanc03/CERSTool/blob/main/static/Images/Parllel.jpg?raw=true" style="position:relative; left:10%; width:1000px; top:15px;">
+    <input type="text" value="PARALLEL" id="TYPE" name="TYPE" hidden>
+    <div class="input1234"  >
+        <div class="input4" >
+          <select name="Model_id" id="Model_id" style="width:150px;" onclick="oninput()">
+            {% for i in model_id %}
+                <option value="{{i.Model_id}}">{{i.Model_id}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <!--p id="demo"></p>
+        <p id="demo1"></p-->
+        <script>
+            document.getElementById("Model_id").onchange = function () {
+                var input = document.getElementById("P_Range");
+                var input1 = document.getElementById("T_out");
+                var input2 = document.getElementById("Tw_out_select");
+                var Model_id1 = document.getElementById("Model_id");
+                var max_v=JSON.parse("{{max_v|escapejs}}");
+                var max_T=JSON.parse("{{max_T|escapejs}}");
+                //document.getElementById("demo").innerHTML = max_v;
+                for(var x in max_v){
+                    if (x==Model_id1.value) {
+                        input.setAttribute("max", max_v[x]);
+                        if(input2.value=="K"){
+                            input1.setAttribute("max", parseFloat(max_T[x]) + 273.15);
+                        }
+                        else if(input2.value=="F"){
+                            input1.setAttribute("max", parseFloat(max_T[x])*1.8 + 32);
+                        }
+                        else{
+                            input1.setAttribute("max", max_T[x]);
+                        }
+                      }
+                    //document.getElementById("demo1").innerHTML = Model_id1.value;
+                }
+                
+            }
+        </script>
+            <div class="input1" >
+                <p>T<sub>amb</sub> &emsp;&nbsp;= <input type="number"; id="T_amb"; name="T_amb" value="{{T_amb}}" min="0" max="50" required>
+                    <input type="text" id="prev" value="C" hidden>
+                <select name="T_amb_select" id="T_amb_select"  onchange="temp()">
+                <option value="C" >C</option>
+                <option value="F">F</option>
+                <option value="K">K</option>
+              </select></p>
+            </div>
+            <!--p id="demo1"></p-->
+            <script>
+                document.getElementById("T_amb_select").temp = function () {
+                    var output = document.getElementById("T_amb");
+                    var T_a1 = document.getElementById("T_amb_select");
+                    var curent=T_a1.value;
+                    var prev = document.getElementById("prev");
+                    if (prev.value=="C" && T_a1.value=="K"){
+                        output.value = parseFloat(output.value) + 273.15;
+                        output.setAttribute("max",parseFloat(output.max)+273.15);
+                        //document.getElementById("demo1").innerHTML = output.max;
+                    }
+                    else if(prev.value=="C" && T_a1.value=="F"){
+                        output.value = parseFloat(output.value)*1.8 + 32;
+                        output.setAttribute("max",parseFloat(output.max)*1.8 + 32);
+                    }
+                    else if(prev.value=="K" && T_a1.value=="C"){
+                        output.value = parseFloat(output.value) - 273.15;
+                        output.setAttribute("max",parseFloat(output.max) - 273.15);
+                    }
+                    else if(prev.value=="K" && T_a1.value=="F"){
+                        output.value = (parseFloat(output.value) - 273.15)*1.8 + 32;
+                        output.setAttribute("max",(parseFloat(output.max) - 273.15)*1.8 + 32);
+                    }
+                    else if(prev.value=="F" && T_a1.value=="C"){
+                        output.value =(parseFloat(output.value) - 32)*(5/9);
+                        output.setAttribute("max",(parseFloat(output.max) - 32)*(5/9));
+                    }
+                    else if(prev.value=="F" && T_a1.value=="K"){
+                        output.value = ((parseFloat(output.value) - 32)*(5/9)) + 273.15;
+                        output.setAttribute("max",((parseFloat(output.max) - 32)*(5/9)) + 273.15);
+                    }
+                    else{
+                        output.value = output.value;
+                        output.setAttribute("max",output.max);
+                    }
+                    //output.value = output.value + 273.15;
+                    //document.getElementById("demo1").innerHTML = prev.value;
+                    prev.setAttribute("value", T_a1.value);
+                }
+            </script>
+            <div class="input2" >
+            <p>RH<sub>amb</sub> &ensp;= <input type="number"; id="RH_amb"; name="RH_amb" step="0.01" value="{{RH_amb}}" min="0" max="0.99" required></p>
+            </div>
+            <div class="input3" >
+            <p>Altitude = <input type="number"; id="Altitude"; name="Altitude" value="{{Altitude}}" min="0" max="1000" required>
+                <input type="text" id="prev4" value="M" hidden>
+              <select name="Altitude_type" id="Altitude_type" onchange="Alt()">
+                <option value="M">M</option>
+                <option value="Feet">Feet</option>
+              </select></p>
+            </div>
+            <script>
+                document.getElementById("Altitude_type").Alt = function () {
+                    var output4 = document.getElementById("Altitude");
+                    var A_type = document.getElementById("Altitude_type");
+                    var curent4=A_type.value;
+                    var prev4 = document.getElementById("prev4");
+                    if (prev4.value=="M" && A_type.value=="Feet"){
+                        output4.value = parseFloat(output4.value) *3.281;
+                        output4.setAttribute("max",parseFloat(output4.max)*3.281);
+                        //document.getElementById("demo1").innerHTML = output.max;
+                    }
+                    else if(prev4.value=="Feet" && A_type.value=="M"){
+                        output4.value = parseFloat(output4.value) /3.281;
+                        output4.setAttribute("max",parseFloat(output4.max)/3.281);
+                    }
+                    else{
+                        output4.value = output4.value;
+                        output4.setAttribute("max",output4.max);
+                    }
+                    //output.value = output.value + 273.15;
+                    //document.getElementById("demo1").innerHTML = prev.value;
+                    prev4.setAttribute("value", A_type.value);
+                }
+            </script>
+    </div>
+    <div class="pressure">
+        <p style="font-size: 14px;"><input type="radio"  id="PVr_type" name="Pressure" value="Variable_Pressure" onclick="ShowHideDiv2()" required>Variable Pressure</p>
+        <p style="font-size: 14px;"><input type="radio"  id="PRr_type" name="Pressure" value="Rated_Pressure" onclick="ShowHideDiv1()" required>Rated Pressure</p>
+    </div>
+    <!--p id="demo1"></p-->
+    <script>
+        function ShowHideDiv1() {
+            var chkYes1 = document.getElementById("PRr_type");
+            var dvPassport = document.getElementById("Pka");
+            if (chkYes1.checked){
+                dvPassport.style.display = "none" ;
+                //document.getElementById("demo1").innerHTML = chkYes1.value;
+            }
+        }
+        function ShowHideDiv2() {
+            var chkYes2 = document.getElementById("PVr_type");
+            var dvPassport = document.getElementById("Pka");
+            if (chkYes2.checked){
+                dvPassport.style.display = "block" ;
+                //document.getElementById("demo1").innerHTML = chkYes2.value;
+            }
+        }
+    </script>
+    <div class="T_in" >
+        <p>T<sub>IN</sub> = <input type="number"; id="T_in"; name="T_in"; min="0"; max="50"; value="{{T_in}}" required>
+            <input type="text" id="prev1" value="C" hidden>
+          <select name="Tw_in_select" id="Tw_in_select" onchange="Tw_in()">
+            <option value="C" >C</option>
+            <option value="F">F</option>
+            <option value="K">K</option>
+          </select></p>
+    </div>
+    <script>
+        document.getElementById("Tw_in_select").Tw_in = function () {
+            var output1 = document.getElementById("T_in");
+            var Tw_a1 = document.getElementById("Tw_in_select");
+            var curent1=Tw_a1.value;
+            var prev1 = document.getElementById("prev1");
+            if (prev1.value=="C" && Tw_a1.value=="K"){
+                output1.value = parseFloat(output1.value) + 273.15;
+                output1.setAttribute("max",parseFloat(output1.max)+273.15);
+            }
+            else if(prev1.value=="C" && Tw_a1.value=="F"){
+                output1.value = parseFloat(output1.value)*1.8 + 32;
+                output1.setAttribute("max",parseFloat(output1.max)*1.8 + 32);
+            }
+            else if(prev1.value=="K" && Tw_a1.value=="C"){
+                output1.value = parseFloat(output1.value) - 273.15;
+                output1.setAttribute("max",parseFloat(output1.max) - 273.15);
+            }
+            else if(prev1.value=="K" && Tw_a1.value=="F"){
+                output1.value = (parseFloat(output1.value) - 273.15)*1.8 + 32;
+                output1.setAttribute("max",(parseFloat(output1.max) - 273.15)*1.8 + 32);
+            }
+            else if(prev1.value=="F" && Tw_a1.value=="C"){
+                output1.value =(parseFloat(output1.value) - 32)*(5/9);
+                output1.setAttribute("max",(parseFloat(output1.max) - 32)*(5/9));
+            }
+            else if(prev1.value=="F" && Tw_a1.value=="K"){
+                output1.value = ((parseFloat(output1.value) - 32)*(5/9)) + 273.15;
+                output1.setAttribute("max",((parseFloat(output1.max) - 32)*(5/9)) + 273.15);
+            }
+            else{
+                output1.value = output1.value;
+                output1.setAttribute("max",output1.max);
+            }
+            //output.value = output.value + 273.15;
+            //document.getElementById("demo1").innerHTML = prev.value;
+            prev1.setAttribute("value", Tw_a1.value);
+        }
+    </script>
+    <div class="T_out" >
+        <p>T<sub>OUT </sub> = <input type="number"; id="T_out"; name="T_out"; min="0"; max="87"; value="{{T_out}}" required>
+            <input type="text" id="prev2" value="C" hidden>
+          <select name="Tw_out_select" id="Tw_out_select" onchange="Tw_out()">
+            <option value="C" >C</option>
+            <option value="F">F</option>
+            <option value="K">K</option>
+          </select></p>
+    </div>
+    <script>
+        document.getElementById("Tw_out_select").Tw_out = function () {
+            var output2 = document.getElementById("T_out");
+            var Tw_b1 = document.getElementById("Tw_out_select");
+            var curent2=Tw_b1.value;
+            var prev2 = document.getElementById("prev2");
+            if (prev2.value=="C" && Tw_b1.value=="K"){
+                output2.value = parseFloat(output2.value) + 273.15;
+                output2.setAttribute("max",parseFloat(output2.max)+273.15);
+            }
+            else if(prev2.value=="C" && Tw_b1.value=="F"){
+                output2.value = parseFloat(output2.value)*1.8 + 32;
+                output2.setAttribute("max",parseFloat(output2.max)*1.8 + 32);
+            }
+            else if(prev2.value=="K" && Tw_b1.value=="C"){
+                output2.value = parseFloat(output2.value) - 273.15;
+                output2.setAttribute("max",parseFloat(output2.max) - 273.15);
+            }
+            else if(prev2.value=="K" && Tw_b1.value=="F"){
+                output2.value = (parseFloat(output2.value) - 273.15)*1.8 + 32;
+                output2.setAttribute("max",(parseFloat(output2.max) - 273.15)*1.8 + 32);
+            }
+            else if(prev2.value=="F" && Tw_b1.value=="C"){
+                output2.value =(parseFloat(output2.value) - 32)*(5/9);
+                output2.setAttribute("max",(parseFloat(output2.max) - 32)*(5/9));
+            }
+            else if(prev2.value=="F" && Tw_b1.value=="K"){
+                output2.value = ((parseFloat(output2.value) - 32)*(5/9)) + 273.15;
+                output2.setAttribute("max",((parseFloat(output2.max) - 32)*(5/9)) + 273.15);
+            }
+            else{
+                output2.value = output2.value;
+                output2.setAttribute("max",output2.max);
+            }
+            //output.value = output.value + 273.15;
+            //document.getElementById("demo1").innerHTML = prev.value;
+            prev2.setAttribute("value", Tw_b1.value);
+        }
+    </script>
+    <div class="Pka" id="Pka" style="display:none">
+        <p>P<sub>Pka</sub>  = <span id="Pka1"></span></p>
+          <input type="range" min="5" max="11.6" step="0.1" value="5" name="P" class="slider" id="P_Range" style="width: 100px;">
+    </div>
+    <script>var slider = document.getElementById("P_Range");
+        var output1 = document.getElementById("Pka1");
+        output1.innerHTML = slider.value;
+        slider.oninput = function() {
+            output1.innerHTML = this.value;
+        }
+    </script>
+    <div class="CTD_AC">
+        <p>CTD<sub>AC</sub>  = <span id="CTD_ac"></span></p>
+          <input type="range" min="8" max="25" value="5" step="1" name="CTD_ac" class="slider" id="CTD1_Range" style="width: 100px;">
+    </div>
+    <script>var slider = document.getElementById("CTD1_Range");
+        var output2 = document.getElementById("CTD_ac");
+        output2.innerHTML = slider.value;
+        slider.oninput = function() {
+            output2.innerHTML = this.value;
+        }
+    </script>
+    <div class="CTD_IC">
+        <p>CTD<sub>IC</sub>  = <span id="CTD_ic"></span></p>
+          <input type="range" min="8" max="11" value="5" step="0.1" name="CTD_ic" class="slider" id="CTD2_Range" style="width: 100px;">
+    </div>
+    <script>var slider = document.getElementById("CTD2_Range");
+        var output3 = document.getElementById("CTD_ic");
+        output3.innerHTML = slider.value;
+        slider.oninput = function() {
+            output3.innerHTML = this.value;
+        }
+    </script>
+
+    <div class="calculate">
+        <input type="submit" name="calculate" value="Calculate">
+    </div>
+    <!--p id="demo1"></p-->
+</form>
+</div>
+<div class="Q_dot_1C" >
+    <p>Q_dot_1 = <input type="number"; id="Q_dot_1"; name="Q_dot_1"; value="0" disabled>
+        <input type="text" id="prev5" value="kW" hidden>
+      <select name="Q_dot_1_select" id="Q_dot_1_select" onchange="Q_dot_1F()">
+        <option value="kW" >kW</option>
+        <option value="W">W</option>
+      </select></p>
+</div>
+<script>
+    document.getElementById("Q_dot_1_select").Q_dot_1F = function () {
+        var output5 = document.getElementById("Q_dot_1");
+        var Q_dot_1_type = document.getElementById("Q_dot_1_select");
+        var curent5=Q_dot_1_type.value;
+        var prev5 = document.getElementById("prev5");
+        if (prev5.value=="kW" && Q_dot_1_type.value=="W"){
+            output5.value = parseFloat(output5.value) *1000;
+        }
+        else if(prev5.value=="W" && Q_dot_1_type.value=="kW"){
+            output5.value = parseFloat(output5.value) /1000;
+        }
+        else{
+            output5.value = output5.value;
+        }
+        //output.value = output.value + 273.15;
+        //document.getElementById("demo1").innerHTML = prev.value;
+        prev5.setAttribute("value", Q_dot_1_type.value);
+    }
+</script>
+<div class="Q_dot_2C" >
+    <p>Q_dot_2 = <input type="number"; id="Q_dot_2"; name="Q_dot_2"; value="0" disabled>
+        <input type="text" id="prev6" value="kW" hidden>
+      <select name="Q_dot_2_select" id="Q_dot_2_select" onchange="Q_dot_2F()">
+        <option value="kW" >kW</option>
+        <option value="W">W</option>
+      </select></p>
+</div>
+<script>
+    document.getElementById("Q_dot_2_select").Q_dot_2F = function () {
+        var output6 = document.getElementById("Q_dot_2");
+        var Q_dot_2_type = document.getElementById("Q_dot_2_select");
+        var curent6=Q_dot_2_type.value;
+        var prev6 = document.getElementById("prev6");
+        if (prev6.value=="kW" && Q_dot_2_type.value=="W"){
+            output6.value = parseFloat(output6.value) *1000;
+        }
+        else if(prev6.value=="W" && Q_dot_2_type.value=="kW"){
+            output6.value = parseFloat(output6.value) /1000;
+        }
+        else{
+            output6.value = output6.value;
+        }
+        //output.value = output.value + 273.15;
+        //document.getElementById("demo1").innerHTML = prev.value;
+        prev6.setAttribute("value", Q_dot_2_type.value);
+    }
+</script>
+<div class="Q_oil_C" >
+    <p>Q_oil &emsp;&nbsp;= <input type="number"; id="Q_oil"; name="Q_oil"; value="0" disabled>
+        <input type="text" id="prev6" value="kW" hidden>
+      <select name="Q_oil_select" id="Q_oil_select" onchange="Q_oilF()">
+        <option value="kW" >kW</option>
+        <option value="W">W</option>
+      </select></p>
+</div>
+<script>
+    document.getElementById("Q_oil_select").Q_oilF = function () {
+        var output6 = document.getElementById("Q_oil");
+        var Q_oil_type = document.getElementById("Q_oil_select");
+        var curent6=Q_oil_type.value;
+        var prev6 = document.getElementById("prev6");
+        if (prev6.value=="kW" && Q_oil_type.value=="W"){
+            output6.value = parseFloat(output6.value) *1000;
+        }
+        else if(prev6.value=="W" && Q_oil_type.value=="kW"){
+            output6.value = parseFloat(output6.value) /1000;
+        }
+        else{
+            output6.value = output6.value;
+        }
+        //output.value = output.value + 273.15;
+        //document.getElementById("demo1").innerHTML = prev.value;
+        prev6.setAttribute("value", Q_oil_type.value);
+    }
+</script>
+<!--p class="OT">Q_dot_1 :<span id="OT"></span> [kW]</p>
+<p class="PT">Q_dot_2 :<span id="PT"></span> [kW]</p>
+<p class="QT">Q_oil :<span id="QT"></span> [kW]</p-->
+
+<script >
+    $(document).on('submit','#post-form',function(e){
+        e.preventDefault();
+        var T_in=document.getElementById("T_in");
+        var T_out=document.getElementById("T_out");
+        var T_ambient=document.getElementById("T_amb");
+        //document.getElementById("demo1").innerHTML = parseFloat(T_out.value)-parseFloat(T_in.value);
+        if (parseFloat(T_out.value)-parseFloat(T_in.value) < 5){
+            alert("T_out should be atleast 5° greater than T_in");
+        }
+        else{
+            if (Math.abs(parseFloat(T_ambient.value)-parseFloat(T_in.value)) < 30){
+                alert("The difference betwwen T_amb and T_in should be greater than 30°.");
+            }
+            $.ajax({
+                type:'POST',
+                url:'/send_data',
+                data:{
+                    TYPE:$('#TYPE').val(),
+                    T_amb:$('#T_amb').val(),
+                    RH_amb:$('#RH_amb').val(),
+                    Altitude:$('#Altitude').val(),
+                    Model_id:$('#Model_id').val(),
+                    P:$('#P_Range').val(),
+                    Pr_type:$('input:radio[name=Pressure]:checked').val(),
+                    T_in:$('#T_in').val(),
+                    T_out:$('#T_out').val(),
+                    CTD_ac:$('#CTD1_Range').val(),
+                    CTD_ic:$('#CTD2_Range').val(),
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                },
+                success:function(data){
+                    document.getElementById("Q_dot_1").value = (data.WF);
+                    document.getElementById("Q_dot_2").value = (data.ReH);
+                    document.getElementById("Q_oil").value = (data.DT);
+                    /*$('#OT').html(data.WF);
+                    $('#PT').html(data.ReH);
+                    $('#QT').html(data.DT);*/
+                }
+            });
+        }
+    });
+</script>
+{% else %}
+<a href="{% url 'Home' %}" style="position:absolute; left:2%;"><b>Log in to continue.</b></a>
+{% endif %}
+</body>
+{% endblock start%}
+
+</html>

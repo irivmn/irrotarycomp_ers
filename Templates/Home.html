@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERS-Tool</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    <style>
+        .avatar {
+            width: 200px;
+            height: 50px;
+            border-radius: 0%;
+            position: absolute;
+            left: 2%;
+        }
+        .top a{
+            text-decoration: none;
+            color: rgb(228, 4, 4);
+            font-size: 16px;
+            font-family: "Lucida Console", "Courier New", monospace;
+            position: absolute;
+            top:15px;
+            left: 91%;
+            margin:8px;
+            border: none; 
+            
+        }
+        .top{
+            background-color: rgb(254, 242, 242);
+            border: solid;
+            border-color: rgb(139, 138, 138);
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            height: 50px;
+        }
+        .bg {
+            position: absolute;
+            top:10%;
+          }
+        .card_series {
+            box-shadow: 0 4px 8px 0 rgb(36, 36, 36);
+            transition: 0.3s;
+            position: absolute;
+            width: 30%;
+            top: 20%;
+            left: 15%;
+        }
+          
+        .card_series:hover {
+            box-shadow: 0 8px 16px 0 rgba(139, 139, 139, 0.2);
+        } 
+        .card_parallel {
+            box-shadow: 0 4px 8px 0 rgb(36, 36, 36);
+            transition: 0.3s;
+            position: absolute;
+            width: 30%;
+            top: 20%;
+            left: 55%;
+        }
+          
+        .card_parallel:hover {
+            box-shadow: 0 8px 16px 0 rgba(139, 139, 139, 0.2);
+        }          
+        .container {
+            padding: 2px 16px;
+        }
+        a{
+            color:black;
+        }
+    </style>
+</head>
+{% block start %}
+<body style="background-color: white; " >
+    {% if user.is_authenticated %}
+    <form>
+    {% csrf_token %}
+    <div class="top" >
+        <img src="https://github.com/Pavanc03/CERSTool/blob/main/static/Images/IR_logo.png?raw=true" class="avatar">
+        <a href="{% url 'logout' %}"><b>Log-out</b></a>
+    </div>
+    <div class="bg">
+        <a href="{% url 'HTP' %}"><b>Trial</b></a>
+    </div>
+    <a href="{% url 'home_series' %}">
+    <div class="card_series">
+        <img src="https://github.com/Pavanc03/CERSTool/blob/main/static/Images/Series.jpg?raw=true" alt="Avatar" style="width:100%">
+        <div class="container">
+          <h4><b>Series Platebar</b></h4> 
+          <p>Series Platebar dfwefw343543532fdsgvfdsfv </p> 
+        </div>
+    </div></a>
+    <a href="{% url 'home_parallel' %}">
+    <div class="card_parallel">
+        <img src="https://github.com/Pavanc03/CERSTool/blob/main/static/Images/Parllel.jpg?raw=true" alt="Avatar" style="width:100%">
+        <div class="container">
+          <h4><b>Parallel Platebar</b></h4> 
+          <p>Parallel Platebar 12345667gfvfdvbdxdv </p> 
+        </div>
+    </div></a>
+</form>
+{% else %}
+<a href="{% url 'Home' %}" style="position:absolute; left:2%; color:red;"><b>Log in to continue.</b></a>
+{% endif %}
+</body>
+{% endblock start%}
+
+</html>

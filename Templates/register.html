@@ -1,0 +1,329 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Register</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			font-family: 'Times New Roman', Times, serif;
+		}
+
+		.avatar {
+            width: 300px;
+            height: 100px;
+            border-radius: 0%;
+            position: relative;
+            left: 10%;
+        }
+
+		.registerbox {
+			width: 400px;
+			height: 500px;
+			background: none;
+			color: black;
+			top: 35%;
+			left: 50%;
+			position: absolute;
+			transform: translate(-50%, -50%);
+			box-sizing: border-box;
+			padding: 70px 30px;
+		}
+
+		.registerbox input[type="text"],
+		input[type="email"],
+		input[type="tel"],
+		input[type="date"],
+        input[type="password"] {
+            border: 1px solid lightslategray;
+            border-radius: 2px;
+            padding: 5px;
+            outline: none;
+            height: 35px;
+            color: black;
+            font-size: 16px;
+        }
+
+        .registerbox input[type="submit"] {
+            border: none;
+            outline: none;
+            width: 104%;
+            height: 30px;
+            background: rgb(230, 16, 16);
+            color: white;
+            font-size: 18px;
+            border-radius: 2px;
+        }
+
+		.registerbox input[type="submit"]:hover {
+            cursor: pointer;
+            background: rgb(186, 23, 23);
+            color: white;
+        }
+
+		.registerbox input {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+		.registerbox a {
+            text-decoration: none;
+            font-size: 14px;
+            line-height: 20px;
+            color: black;
+        }
+
+		.butt_n {
+			position: absolute;
+			left: 7%;
+			width: 95%;
+		}
+
+		.BI {
+            top: 380px;
+            width: 100%;
+            height: 400px;
+            position: relative;
+           
+        }
+
+		form i {
+            margin-left: -30px;
+            cursor: pointer;
+        }
+	</style>
+</head>
+{% block start%}
+<body style="background-color: white; ">
+	<img src="https://github.com/Pavanc03/CERSTool/blob/main/static/Images/123.png?raw=true" class="BI">
+		<div class="registerbox">
+				<img src="https://github.com/Pavanc03/CERSTool/blob/main/static/Images/IR_logo.png?raw=true" class="avatar">
+				<p style="color:red">{{error}}</p>
+			<form method="POST" action="register">
+				{% csrf_token %}
+				<input class="user_inputs" type="text" 
+						placeholder="First name" name="fname" value="{{fname}}" id="fname" required><br>
+				<input class="user_inputs" type="text" 
+						placeholder="Last name" name="lname" value="{{lname}}" id="lname" required><br>
+				<input class="user_inputs" type="text" 
+					placeholder="User ID" name="userid" value="{{userid}}" id="userid"  required><br>
+				<input class="user_inputs" type="email"
+						placeholder="Mail ID" name="email" value="{{email}}" id="email"  required><br>
+				<!--input class="user_inputs" type="tel"
+						placeholder="Phone number" name="phone" value="{{phone_no}}" id="phone"  required><br-->
+				<!-- input class="user_inputs" type="date"
+						placeholder="Date of Birth" name="dob" value="{{dob}}" id="dob"  required><br-->
+				<input class="user_inputs" type="password"
+						placeholder="Enter password" name="psw1" id="password1" required>
+						<i class="bi bi-eye-slash" id="togglePassword1"></i>
+						<small></small><br>
+				<input class="user_inputs" type="password"
+						placeholder="Re-enter password" name="psw2" id="password2" required>
+						<i class="bi bi-eye-slash" id="togglePassword2"></i>
+						<small></small><br>
+						
+				<input type="submit" name="sub" value="Register" id="signup" class="sub">
+			</form>
+			<a href="{% url 'home' %}">Already have account.</a>
+		</div>
+	<script>
+    
+	const usernameEl = document.querySelector('#userid');
+	const emailEl = document.querySelector('#email');
+	const passwordEl = document.querySelector('#password1');
+	const confirmPasswordEl = document.querySelector('#password2');
+	const form = document.querySelector('#signup');
+	const togglePassword1 = document.querySelector("#togglePassword1");
+	const togglePassword2 = document.querySelector("#togglePassword2");
+
+	togglePassword1.addEventListener("click", function () {
+    	// toggle the type attribute
+    	const type = passwordEl.getAttribute("type") === "password" ? "text" : "password";
+		passwordEl.setAttribute("type", type);
+				
+		// toggle the icon
+		this.classList.toggle("bi-eye");
+	});
+
+	togglePassword2.addEventListener("click", function () {
+		// toggle the type attribute
+		const type = confirmPasswordEl.getAttribute("type") === "password" ? "text" : "password";
+		confirmPasswordEl.setAttribute("type", type);
+				
+		// toggle the icon
+		this.classList.toggle("bi-eye");
+	});
+
+	const checkUsername = () => {
+
+    	let valid = false;
+
+    	const min = 3,
+        max = 25;
+
+    	const username = usernameEl.value.trim();
+
+    	if (!isRequired(username)) {
+    	   showError(usernameEl, 'Username cannot be blank.');
+    	} else if (!isBetween(username.length, min, max)) {
+    	    showError(usernameEl, `Username must be between ${min} and ${max} characters.`)
+    	} else {
+    	    showSuccess(usernameEl);
+    	    valid = true;
+    	}
+    	return valid;
+	};
+
+
+	const checkEmail = () => {
+    	let valid = false;
+    	const email = emailEl.value.trim();
+    	if (!isRequired(email)) {
+    	    showError(emailEl, 'Email cannot be blank.');
+    	} else if (!isEmailValid(email)) {
+        	showError(emailEl, 'Email is not valid.')
+    	} else {
+        	showSuccess(emailEl);
+        	valid = true;
+   		}
+    	return valid;
+	};
+
+	const checkPassword = () => {
+    	let valid = false;
+
+
+    	const password = passwordEl.value.trim();
+
+	    if (!isRequired(password)) {
+    	    showError(passwordEl, 'Password cannot be blank.');
+    	} else if (!isPasswordSecure(password)) {
+        	showError(passwordEl, 'Password must has at least 8 characters that include at least 1 lowercase character, 1 uppercase characters, 1 number, and 1 special character in (!@#$%^&*)');
+    	} else {
+        	showSuccess(passwordEl);
+        	valid = true;
+    	}
+
+    	return valid;
+	};
+
+	const checkConfirmPassword = () => {
+    	let valid = false;
+    	// check confirm password
+    	const confirmPassword = confirmPasswordEl.value.trim();
+    	const password = passwordEl.value.trim();
+
+    	if (!isRequired(confirmPassword)) {
+        	showError(confirmPasswordEl, 'Please enter the password again');
+    	} else if (password !== confirmPassword) {
+        	showError(confirmPasswordEl, 'The password does not match');
+    	} else {
+        	showSuccess(confirmPasswordEl);
+        	valid = true;
+    	}
+
+	    return valid;
+	};
+
+	const isEmailValid = (email) => {
+    	const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    	return re.test(email);
+	};
+
+	const isPasswordSecure = (password) => {
+    	const re = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+    	return re.test(password);
+	};
+
+	const isRequired = value => value === '' ? false : true;
+	const isBetween = (length, min, max) => length < min || length > max ? false : true;
+
+
+	const showError = (input, message) => {
+    	// get the form-field element
+    	const formField = input.parentElement;
+    	// add the error class
+    	formField.classList.remove('success');
+    	formField.classList.add('error');
+
+    	// show the error message
+    	const error = formField.querySelector('small');
+    	error.textContent = message;
+	};
+
+	const showSuccess = (input) => {
+    	// get the form-field element
+    	const formField = input.parentElement;
+
+	    // remove the error class
+    	formField.classList.remove('error');
+    	formField.classList.add('success');
+
+    	// hide the error message
+    	const error = formField.querySelector('small');
+    	error.textContent = '';
+	}
+
+
+	form.addEventListener('submit', function (e) {
+    	// prevent the form from submitting
+    	e.preventDefault();
+
+    	// validate fields
+    	let isUsernameValid = checkUsername(),
+        	isEmailValid = checkEmail(),
+        	isPasswordValid = checkPassword(),
+        	isConfirmPasswordValid = checkConfirmPassword();
+
+	    let isFormValid = isUsernameValid &&
+    	    isEmailValid &&
+        	isPasswordValid &&
+        	isConfirmPasswordValid;
+
+    	// submit to the server if the form is valid
+    	if (isFormValid) {
+
+ 	   }
+	});
+
+
+	const debounce = (fn, delay = 500) => {
+    	let timeoutId;
+    	return (...args) => {
+        	// cancel the previous timer
+        	if (timeoutId) {
+            	clearTimeout(timeoutId);
+        	}
+        	// setup a new timer
+        	timeoutId = setTimeout(() => {
+            	fn.apply(null, args)
+        	}, delay);
+    	};
+	};
+
+	form.addEventListener('input', debounce(function (e) {
+    	switch (e.target.id) {
+        	case 'userid':
+            	checkUsername();
+            	break;
+        	case 'email':
+            	checkEmail();
+            	break;
+        	case 'password1':
+            	checkPassword();
+            	break;
+        	case 'password2':
+            	checkConfirmPassword();
+            	break;
+    	}
+	}));
+
+	</script>
+</body>
+{% endblock start%}
+</html>
