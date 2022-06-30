@@ -187,13 +187,13 @@
 <body style="background-color: white; " >
     {% if user.is_authenticated %}
     <div class="top" >
-        <img src="{% static 'Images\IR_logo.png' %}" class="avatar">
+        <img src="https://github.com/irivmn/irrotarycomp_ers/blob/main/static/Images/IR_logo.png?raw=true" class="avatar">
         <a href="{% url 'logout' %}"><b>Log-out</b></a>
     </div>
 <div class="bg">
 <form id="post-form">
     {% csrf_token %}
-    <img src="{% static 'Images\Parllel.jpg' %}" style="position:relative; left:10%; width:1000px; top:15px;">
+    <img src="https://github.com/irivmn/irrotarycomp_ers/blob/main/static/Images/Parllel.jpg?raw=true" style="position:relative; left:10%; width:1000px; top:15px;">
     <input type="text" value="PARALLEL" id="TYPE" name="TYPE" hidden>
     <div class="input1234"  >
         <div class="input4" >
